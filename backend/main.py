@@ -8,14 +8,15 @@ class QueryInput(BaseModel):
     question: str
 
 
+
 class Column(BaseModel):
     name: str
     description: str
-    value: str
 
 
 class Table(BaseModel):
     columns: List[Column]
+    rows: List[List[str]]
 
 
 class QueryResponse(BaseModel):
@@ -25,5 +26,13 @@ class QueryResponse(BaseModel):
 
 @app.post("/query")
 def query(q: QueryInput) -> QueryResponse:
-    return {"message": "Hello World"}
+    return QueryResponse(
+        summary="This is a summary",
+        table=Table(
+            columns=[
+                Column(name="column1", description="description1", value="value1"),
+                Column(name="column2", description="description2", value="value2"),
+            ]
+        ),
+    )
 
