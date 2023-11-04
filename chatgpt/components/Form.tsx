@@ -128,42 +128,40 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl'>
         {isLoading
           ? history.map((item: any, index: number) => {
-              return (
-                <div
-                  key={index}
-                  className={`${
-                    index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
+            return (
+              <div
+                key={index}
+                className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
                   } p-3 rounded-lg`}
-                >
-                  <p>{item}</p>
-                </div>
-              )
-            })
+              >
+                <p>{item}</p>
+              </div>
+            )
+          })
           : history
-          ? history.map((item: string, index: number) => {
+            ? history.map((item: string, index: number) => {
               return (
                 <div
                   key={index}
-                  className={`${
-                    index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
-                  } p-3 rounded-lg`}
+                  className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
+                    } p-3 rounded-lg`}
                 >
                   <p>{item}</p>
                 </div>
               )
             })
-          : null}
+            : null}
       </div>
       <form
         onSubmit={handleSubmit}
-        className='fixed bottom-0 w-full md:max-w-3xl bg-gray-700 rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'
+        className='fixed bottom-0 w-full md:max-w-3xl bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'
       >
         <textarea
           name='Message'
           placeholder='Type your query'
           ref={messageInput}
           onKeyDown={handleEnter}
-          className='w-full resize-none bg-transparent outline-none pt-4 pl-4 translate-y-1'
+          className='w-full resize-none bg-white outline-none pt-4 pl-4 translate-y-1'
         />
         <button
           disabled={isLoading}
