@@ -106,18 +106,6 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
   return (
     <div className='flex justify-center'>
-      <select
-        value={currentModel}
-        onChange={handleModelChange}
-        className='w-72 fixed top-5 left-5 outline-none border-none p-4 rounded-md bg-white text-gray-500 dark:hover:text-gray-400 dark:hover:bg-gray-900'
-      >
-        {models.map((model) => (
-          <option key={model.id} value={model.id}>
-            {model.id}
-          </option>
-        ))}
-      </select>
-
       <button
         onClick={handleReset}
         type='reset'
