@@ -25,62 +25,39 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     }
   }
 
+  // ... assuming you've imported `postQuestion` and defined other state/hooks ...
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const message = messageInput.current?.value
-    if (message !== undefined) {
-      setHistory((prev) => [...prev, message])
-      messageInput.current!.value = ''
-    }
+    e.preventDefault();
 
+    // Assuming messageInput is a ref to your input element
+    const message = messageInput.current?.value;
     if (!message) {
-      return
+      return; // Don't proceed if the message is empty
     }
 
-    const response = await fetch('/api/response', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message,
-        currentModel,
-      }),
-    })
-    console.log('Edge function returned.')
+    setHistory((prev) => [...prev, message]); // Add the message to the history
 
-    console.log(response)
+    messageInput.current!.value = ''; // Clear the input field
 
-    if (!response.ok) {
-      throw new Error(response.statusText)
+    try {
+      setIsLoading(true); // Set loading state before the request
+
+      // Use the postQuestion function to send the message to the API
+      const responseData = await postQuestion(message);
+
+      console.log('API Response:', responseData);
+
+      // Process your responseData here
+
+    } catch (error) {
+      // Handle any errors from the API request
+      console.error('API Request failed:', error);
+    } finally {
+      setIsLoading(false); // Reset loading state after the request
     }
+  };
 
-    const data = response.body
-    if (!data) {
-      return
-    }
-
-    const reader = data.getReader()
-    const decoder = new TextDecoder()
-    let done = false
-
-    setHistory((prev) => [...prev, message])
-
-    let currentResponse: string[] = []
-    while (!done) {
-      const { value, done: doneReading } = await reader.read()
-      done = doneReading
-      const chunkValue = decoder.decode(value)
-      // currentResponse = [...currentResponse, message, chunkValue];
-      currentResponse = [...currentResponse, chunkValue]
-      setHistory((prev) => [...prev.slice(0, -1), currentResponse.join('')])
-      console.log('rerender')
-    }
-    console.log('rerender-2')
-    // breaks text indent on refresh due to streaming
-    // localStorage.setItem('response', JSON.stringify(history))
-    setIsLoading(false)
-  }
 
   const handleReset = () => {
     localStorage.removeItem('response')
