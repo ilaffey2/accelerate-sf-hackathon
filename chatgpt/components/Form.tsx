@@ -146,7 +146,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       >
         <textarea
           name='Message'
-          placeholder='Type your query'
+          placeholder='Submit a message'
           ref={messageInput}
           onKeyDown={handleEnter}
           className='w-full resize-none bg-white outline-none pt-4 pl-4 translate-y-1'
