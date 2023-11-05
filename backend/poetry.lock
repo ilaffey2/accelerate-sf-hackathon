@@ -1394,6 +1394,22 @@ files = [
 ]
 
 [[package]]
+name = "libsql-client"
+version = "0.3.0"
+description = "Python SDK for libSQL"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "libsql_client-0.3.0-py3-none-any.whl", hash = "sha256:b9edc4bc3b2c5f7e10a397e7a4e36451633a3ae4f2d7cec82c6767ccb9c34420"},
+    {file = "libsql_client-0.3.0.tar.gz", hash = "sha256:8ed74e37601fc60498dfd70c5086252e8b8abb7974f7973be93d05dbdf589d05"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.0,<4.0"
+typing-extensions = ">=4.5,<5.0"
+
+[[package]]
 name = "markupsafe"
 version = "2.1.3"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -3124,4 +3140,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.13"
-content-hash = "e1187c08c5d92ccde6e4d313cd15272e9987713aefaf2d3d92d7b0802fa933be"
+content-hash = "f3bdaae0d24e6c7636377af2b0b02af67ef524f4396afa638fad3515270b8489"
