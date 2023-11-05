@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+const { NEXT_PUBLIC_BACKEND_AP } = process.env
+
+const URL = NEXT_PUBLIC_BACKEND_AP ? NEXT_PUBLIC_BACKEND_AP : 'http://localhost:5000'
 
 // Define the TypeScript types for the expected response
 type QueryResponse = {
@@ -16,7 +19,7 @@ type RequestData = {
 export const runtime = 'edge'
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const url = 'https://hermit-sharp-bengal.ngrok-free.app/visualize';
+  const url = URL + '/visualize';
   
   // Prepare the request body with the question parameter
 //   const { question } = (await request.json()) as RequestData

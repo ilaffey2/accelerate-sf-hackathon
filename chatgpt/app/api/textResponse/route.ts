@@ -14,9 +14,12 @@ type RequestData = {
 }
 
 export const runtime = 'edge'
+const { NEXT_PUBLIC_BACKEND_AP } = process.env
+
+const URL = NEXT_PUBLIC_BACKEND_AP ? NEXT_PUBLIC_BACKEND_AP : 'http://localhost:5000'
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const url = 'https://accelerate-sf-hackathon-production.up.railway.app/query';
+  const url = URL + '/query';
   
   // Prepare the request body with the question parameter
   const { question } = (await request.json()) as RequestData
