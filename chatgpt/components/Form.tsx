@@ -209,12 +209,20 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
             ? history.map((item: string, index: number) => {
               return (
                 <div key={index}>
-                  <ResponseComp item={item} index={index} />
+                  <ResponseComp
+                    key={index}
+                    item={item}
+                    index={index}
+                    tableData={tableData}
+                    isTableVisible={isTableVisible}
+                    setTableVisible={setTableVisible}
+                    tableContainerRef={tableContainerRef}
+                  />
                 </div>
               )
             })
             : null}
-        <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
+        {/* <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
           {tableData && tableData.length > 0 &&
             (
               <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white">
@@ -229,7 +237,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               </div>
             </>
           )}
-        </div>
+        </div> */}
       </div>
       <div className='fixed bottom-20'>
         {history.length === 0 && (
