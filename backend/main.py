@@ -1,3 +1,4 @@
+import os 
 from fastapi import FastAPI
 from schema import QueryInput, Column, Table, QueryResponse, VisualizeResponse
 import json
@@ -11,12 +12,13 @@ from sqlquery import execute_sql
 
 app = FastAPI()
 
+GCP_PROJECT_ID=os.getenv('GCP_PROJECT_ID')
 
-example_sql = """
+example_sql = f"""
 SELECT
   *
 FROM
-  `hazel-mote-150900.vendor_payments.vouchers`
+  `{GCP_PROJECT_ID}.vendor_payments.vouchers`
 limit 1000
 """
 
