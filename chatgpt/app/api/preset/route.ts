@@ -7,24 +7,22 @@ type QueryResponse = {
     columns: { name: string; description: string }[];
     rows: string[][];
   };
+  sql: string
 };
 
 type RequestData = {
-  question: string
+  id: string
 }
 
 export const runtime = 'edge'
-const { NEXT_PUBLIC_BACKEND_API } = process.env
-
-const URL = NEXT_PUBLIC_BACKEND_API ? NEXT_PUBLIC_BACKEND_API : 'http://0.0.0.0:8000'
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const url = URL + '/query';
+  const url = 'http://0.0.0.0:8000/preset';
   
   // Prepare the request body with the question parameter
-  const { question } = (await request.json()) as RequestData
+  const { id } = (await request.json()) as RequestData
 
-  console.log('question', question)
+  console.log('id', id)
 
   try {
     // Perform the fetch request
@@ -33,7 +31,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({question}),
+      body: JSON.stringify({i: id}),
     });
 
     // Check if the request was successful
@@ -44,7 +42,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // // Parse the JSON response
     const responseData: QueryResponse = await response.json();
     const { columns, rows } = responseData.table;
-    const {summary} = responseData
+    const {summary, sql} = responseData
 
       // Transform the columns into an array of strings
       const transformedColumns = columns.map(column => column.name);
@@ -65,7 +63,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // // Return the parsed data
     // return data;
 
-    const data = {table, summary}
+    const data = {table, summary, sql}
 
     return NextResponse.json({data}, {status: 200})
   } catch (error) {

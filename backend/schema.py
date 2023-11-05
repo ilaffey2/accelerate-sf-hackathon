@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Optional, Any
 
+
 class QueryInput(BaseModel):
     question: str
 
@@ -19,6 +20,12 @@ class Table(BaseModel):
 class QueryResponse(BaseModel):
     summary: str
     table: Table
+    sql: str
+
+
+class PresetInput(BaseModel):
+    i: int
+
 
 class VisualizeResponse(BaseModel):
     imageString: str
@@ -36,9 +43,10 @@ type: {self.type}
 description: {self.description}
 
 """
-    
+
     def __repr__(self):
         return self.__str__()
+
 
 class TableSchema(BaseModel):
     name: str
@@ -53,8 +61,6 @@ description: {self.description}
 columns: {self.columns}
 
 """
-    
+
     def __repr__(self):
         return self.__str__()
-
-

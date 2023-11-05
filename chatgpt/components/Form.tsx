@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
+import { Spinner } from '@chakra-ui/react'
 // import * as echarts from 'echarts';
 
 // type EChartsOption = echarts.EChartsOption;
@@ -28,36 +29,50 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   // const [models, setModels] = useState<ModelType[]>([])
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
+  const [sql , setSql] = useState<string>('')
 
-  const handlePromptSelection = (promptText: string) => {
-    if (messageInput.current) {
-      messageInput.current.value = promptText;
-      // "Click" the submit button programmatically
-      submitButtonRef.current?.click();
+  const handlePromptSelection = async (promptText: string, id: number) => {
+    try{
+      if (messageInput.current) {
+        setIsLoading(true)
+        messageInput.current.value = promptText;
+
+        setHistory((prev) => [...prev, promptText]); // Add the message to the history
+        messageInput.current!.value = ''; // Clear the input field
+
+
+        const response = await fetch('/api/preset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        })
+
+        const responseData = await response.json();
+
+        console.log(responseData)
+
+
+        setTableData(responseData.data.table)
+        setSql(responseData.data.sql)
+
+        setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
+      }
+    } catch (error) {
+      // Handle any errors from the API request
+      console.error('API Request failed:', error);
+    } finally {
+      setIsLoading(false); // Reset loading state after the request
     }
   };
   const [tableData, setTableData] = useState<string[][]>([])
   const [isTableVisible, setTableVisible] = useState(true);
 
-  const tableContainerRef = useRef<any>(null);
 
-  useEffect(() => {
-    const container = tableContainerRef.current;
-    console.log('container', container)
 
-    if (!container) return;
-    const handleWheel = (e: any) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      container.scrollLeft += e.deltaY;
-    };
-
-    container.addEventListener('wheel', handleWheel);
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-    };
-  }, [tableData]);
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
@@ -105,6 +120,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       console.log('API Response Summary:', responseData.data.summary);
       console.log('API Response Table:', responseData.data.table)
       setTableData(responseData.data.table)
+      setSql(responseData.data.sql)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
@@ -140,6 +156,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const handleReset = () => {
     localStorage.removeItem('response')
     setHistory([])
+    setSql("")
+    setTableData([])
   }
 
   // Save the 'history' state to 'localStorage' whenever it changes
@@ -218,22 +236,28 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               )
             })
             : null}
-        <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
-          {tableData && tableData.length > 0 &&
-            (
-              <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white">
-                {isTableVisible ? 'Hide Table' : 'Show Table'}
-              </button>)
-          }
-          {tableData && tableData.length > 0 && (
-            <>
-
-              <div ref={tableContainerRef} style={{ maxWidth: '100%', maxHeight: '550px', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }} className={isTableVisible ? '' : 'hidden'}>
-                <Table data={tableData} />
-              </div>
-            </>
-          )}
-        </div>
+            <div className='w-full mx-2 flex flex-col items-start gap-3 pb-6 last:mb-6 md:mx-auto md:max-w-6xl'>
+            {sql && <div className="inline-flex items-center bg-gray-800 text-green-400 text-xs px-2 py-1 rounded-md border border-green-400 font-mono flex-col gap-y-6">
+          <span className="mr-1 font-bold text-white">SQL Query:</span>
+          <code className='mx-6'>{sql}</code>
+        </div>}
+        {isLoading &&  <Spinner height={'5xl'} width={'5xl'}/>}
+        {tableData  && tableData.length > 0 && 
+        (
+        <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white"> 
+          {isTableVisible ? 'Hide Table' : 'Show Table'}
+        </button>)
+        }
+        {tableData && tableData.length > 0 && (
+          <>
+          
+          <div style={{ maxWidth: '100%', maxHeight: '550px', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }} className={isTableVisible ? '' : 'hidden'}>
+            <Table data={tableData} />
+          </div>
+          </>
+        )}
+       
+      </div>
       </div>
       <div className='fixed bottom-20'>
         {history.length === 0 && (
