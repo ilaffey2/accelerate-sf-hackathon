@@ -11,8 +11,9 @@ def schema(f):
     return dict(name=f.__name__, description=f.__doc__, parameters=s)
 
 
-def askgpt(user, system=None, model="gpt-3.5-turbo", **kwargs):
+def askgpt(query, system=None, model="gpt-3.5-turbo", **kwargs):
     msgs = []
-    if system: msgs.append({"role": "system", "content": system})
-    msgs.append({"role": "user", "content": user})
+    if system: 
+        msgs.append({"role": "system", "content": system})
+    msgs.append({"role": "user", "content": query})
     return ChatCompletion.create(model=model, messages=msgs, **kwargs)

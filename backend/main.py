@@ -1,6 +1,9 @@
 import os 
+from time import time
+import openai
 from fastapi import FastAPI
 from schema import QueryInput, Column, Table, QueryResponse, VisualizeResponse
+from ai import askgpt, schema
 import json
 import matplotlib
 matplotlib.use('Agg') # Must be before importing matplotlib.pyplot or pylab!
@@ -11,6 +14,7 @@ import base64
 from sqlquery import execute_sql
 
 app = FastAPI()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 GCP_PROJECT_ID=os.getenv('GCP_PROJECT_ID')
 
@@ -18,12 +22,35 @@ example_sql = f"""
 SELECT
   *
 FROM
-  `{GCP_PROJECT_ID}.vendor_payments.vouchers`
+  `{GCP_PROJECT_ID}.vendor_payments.spending_and_revenue`
 limit 1000
 """
 
 @app.post("/query")
-def query(q: QueryInput):
+def query(q: QueryInput) ->QueryResponse:
+
+    # ask gpt to general sql
+    # sql = askgpt(q.question)
+    # print(sql)
+    results, columns = execute_sql(example_sql)
+    return QueryResponse(
+        summary="This is a summary",
+        table=Table(
+            columns=columns,
+            rows=results,
+        ),
+    )
+
+@app.post("/query-test")
+def query(q: QueryInput) ->QueryResponse:
+
+    # ask gpt to general sql
+    st = time.now()
+    sql = askgpt(q.question)
+    et = time.now()
+
+    print("query took", et - st, "seconds")
+    print(sql)
     results, columns = execute_sql(example_sql)
 
     print("columns", columns)
@@ -34,6 +61,7 @@ def query(q: QueryInput):
             rows=results,
         ),
     )
+
 
 @app.post("/visualize_test")
 def query() -> VisualizeResponse:
@@ -87,8 +115,6 @@ buf.seek(0)
     # Convert the BytesIO object to a base64 string
     image_base64 = base64.b64encode(buf.read()).decode('utf-8')
 
-    # Return the base64 string
-    # return VisualizeResponse(imageString="test")
     return VisualizeResponse(imageString=image_base64)
     
 

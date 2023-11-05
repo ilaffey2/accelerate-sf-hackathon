@@ -17,6 +17,7 @@ numpy = "^1.26.1"
 pandas = "^2.1.2"
 libsql-client = "^0.3.0"
 google-cloud-bigquery = "^3.13.0"
+matplotlib = "^3.8.1"
 
 
 [build-system]
