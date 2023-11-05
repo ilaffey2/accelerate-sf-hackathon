@@ -30,9 +30,13 @@ def query(q: QueryInput) -> QueryResponse:
         summary="This is a summary",
         table=Table(
             columns=[
-                Column(name="column1", description="description1", value="value1"),
-                Column(name="column2", description="description2", value="value2"),
-            ]
+                Column(name="Column 1", description="This is the first column"),
+                Column(name="Column 2", description="This is the second column"),
+            ],
+            rows=[
+                ["Row 1", "Row 1"],
+                ["Row 2", "Row 2"],
+            ],
         ),
     )
 
