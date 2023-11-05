@@ -112,18 +112,18 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
 
 
-      const response2 = await fetch('/api/imgResponse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify({
-        //   question: message,
-        // }),
-      })
+      // const response2 = await fetch('/api/imgResponse', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   // body: JSON.stringify({
+      //   //   question: message,
+      //   // }),
+      // })
 
-      const responseData2 = await response2.json();
-      console.log('API Image Response:', responseData2.data.imageString)
+      // const responseData2 = await response2.json();
+      // console.log('API Image Response:', responseData2.data.imageString)
 
 
 
@@ -162,6 +162,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   return (
     <div className='flex justify-center max-w-screen overflow-x-auto'>
 
+      <div className='fixed left-[20px] top-[35px] text-blue-500 underline'>Source</div>
       <button
         onClick={handleReset}
         type='reset'
@@ -170,7 +171,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         Clear History
       </button>
       {history.length === 0 && (
-        <div className='fixed left-[33%] mt-10 font-semibold text-lg text-decoration-line: underline'>
+        <div className='fixed left-[33%] mt-8 font-semibold text-lg text-decoration-line: underline'>
           Ask anything about SF government spending, contracts, etc!
         </div>
       )}
@@ -200,7 +201,6 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               >
                 <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
                   }`}>{item}</p>
-                {index % 2 !== 0 && <div>Source</div>}
               </div>
             )
           })
