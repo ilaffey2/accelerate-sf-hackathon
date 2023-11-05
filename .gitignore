@@ -7,3 +7,4 @@ gcp-creds.json
 *.ipynb
 backend/.ipynb_checkpoints/
 /node_modules
+backend/.venv

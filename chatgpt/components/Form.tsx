@@ -40,25 +40,25 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const [tableData, setTableData] = useState<string[][]>([])
   const [isTableVisible, setTableVisible] = useState(true);
 
-  const tableContainerRef = useRef<any>(null);
+  // const tableContainerRef = useRef<any>(null);
 
-  useEffect(() => {
-    const container = tableContainerRef.current;
-    console.log('container', container)
+  // useEffect(() => {
+  //   const container = tableContainerRef.current;
+  //   console.log('container', container)
 
-    if (!container) return;
-    const handleWheel = (e: any) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      container.scrollLeft += e.deltaY;
-    };
+  //   if (!container) return;
+  //   const handleWheel = (e: any) => {
+  //     if (e.deltaY === 0) return;
+  //     e.preventDefault();
+  //     container.scrollLeft += e.deltaY;
+  //   };
 
-    container.addEventListener('wheel', handleWheel);
+  //   container.addEventListener('wheel', handleWheel);
 
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-    };
-  }, [tableData]);
+  //   return () => {
+  //     container.removeEventListener('wheel', handleWheel);
+  //   };
+  // }, [tableData]);
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
@@ -216,7 +216,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                     tableData={tableData}
                     isTableVisible={isTableVisible}
                     setTableVisible={setTableVisible}
-                    tableContainerRef={tableContainerRef}
+                  //tableContainerRef={tableContainerRef}
                   />
                 </div>
               )

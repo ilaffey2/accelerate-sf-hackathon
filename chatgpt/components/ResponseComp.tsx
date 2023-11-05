@@ -1,5 +1,7 @@
 import React from 'react';
 import Table from "./Table";
+import { useEffect, useRef, useState } from 'react'
+
 
 interface ResponseCompProps {
     item: string;
@@ -7,7 +9,7 @@ interface ResponseCompProps {
     tableData: string[][];
     isTableVisible: boolean;
     setTableVisible: (isVisible: boolean) => void;
-    tableContainerRef: React.RefObject<HTMLDivElement>;
+    //tableContainerRef: React.RefObject<HTMLDivElement>;
 }
 
 const ResponseComp: React.FC<ResponseCompProps> = ({
@@ -16,8 +18,29 @@ const ResponseComp: React.FC<ResponseCompProps> = ({
     tableData,
     isTableVisible,
     setTableVisible,
-    tableContainerRef,
+    //tableContainerRef,
 }) => {
+
+    const tableContainerRef = useRef<any>(null);
+
+    useEffect(() => {
+        const container = tableContainerRef.current;
+        console.log('container', container)
+
+        if (!container) return;
+        const handleWheel = (e: any) => {
+            if (e.deltaY === 0) return;
+            e.preventDefault();
+            container.scrollLeft += e.deltaY;
+        };
+
+        container.addEventListener('wheel', handleWheel);
+
+        return () => {
+            container.removeEventListener('wheel', handleWheel);
+        };
+    }, [tableData]);
+
     return (
         <div>
             <div className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'} p-3 rounded-lg mb-3`}>
