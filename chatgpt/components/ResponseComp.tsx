@@ -24,7 +24,7 @@ const ResponseComp: React.FC<ResponseCompProps> = ({
 }) => {
 
     const tableContainerRef = useRef<any>(null);
-    const [isTableVisible, setTableVisible] = useState(true);
+    const [isTableVisible, setTableVisible] = useState(false);
 
 
     useEffect(() => {
