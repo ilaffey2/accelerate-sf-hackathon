@@ -1,7 +1,8 @@
 import os 
-from time import time
+import time
 import openai
 from fastapi import FastAPI
+from prompt import get_sql_query_prompt
 from schema import QueryInput, Column, Table, QueryResponse, VisualizeResponse
 from ai import askgpt, schema
 import json
@@ -10,7 +11,7 @@ matplotlib.use('Agg') # Must be before importing matplotlib.pyplot or pylab!
 import matplotlib.pyplot as plt
 import io
 import base64
-
+from table_schema import schema
 from sqlquery import execute_sql
 
 app = FastAPI()
@@ -22,38 +23,21 @@ example_sql = f"""
 SELECT
   *
 FROM
-  `{GCP_PROJECT_ID}.vendor_payments.spending_and_revenue`
+  `{GCP_PROJECT_ID}.vendor_payments.vouchers`
 limit 1000
 """
 
 @app.post("/query")
 def query(q: QueryInput) ->QueryResponse:
+    prompt = get_sql_query_prompt(q.question, schema)
 
-    # ask gpt to general sql
-    # sql = askgpt(q.question)
-    # print(sql)
-    results, columns = execute_sql(example_sql)
-    return QueryResponse(
-        summary="This is a summary",
-        table=Table(
-            columns=columns,
-            rows=results,
-        ),
-    )
+    st = time.time()
+    sql = askgpt(prompt, "gpt-4")
+    et = time.time()
 
-@app.post("/query-test")
-def query(q: QueryInput) ->QueryResponse:
+    print("Query took: ", et - st, "seconds")
 
-    # ask gpt to general sql
-    st = time.now()
-    sql = askgpt(q.question)
-    et = time.now()
-
-    print("query took", et - st, "seconds")
-    print(sql)
-    results, columns = execute_sql(example_sql)
-
-    print("columns", columns)
+    results, columns = execute_sql(sql)
     return QueryResponse(
         summary="This is a summary",
         table=Table(

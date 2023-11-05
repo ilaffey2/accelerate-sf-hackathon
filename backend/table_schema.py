@@ -1,0 +1,27 @@
+schema = """
+Fiscal Year,INTEGER,"An accounting period of 12 months. The City and County of San Francisco operates on a fiscal year that begins on July 1 and ends on June 30 the following year. The Fiscal Year ending June 30, 2012 is represented as FY2011-2012."
+Purchase Order,TEXT,A Purchase Order is a document that reserves a specific amount of money for payment to a vendor for a specific purpose.
+Voucher,INTEGER,"A Voucher is a request for payment. This can either be a payment using funding reserved in an Encumbrance, or it can be a Direct Payment."
+Vendor,TEXT,An organization that the City pays in return for goods or services.
+Related Gov't Units,TEXT,"In SFOpenBook, these are fiduciary funds and component units that are included in the City’s financial statements but are different in nature from the other funds and organizations in City government. Fiduciary Funds include all Trust and Agency Funds that account for assets held by the City as a trustee or as an agency for individuals or other governmental units."
+Organization Group Code,TEXT,"Org Group is a group of Departments. For example, the Public Protection Org Group includes departments such as the Police, Fire, Adult Probation, District Attorney, and Sheriff."
+Organization Group,TEXT,"Org Group is a group of Departments. For example, the Public Protection Org Group includes departments such as the Police, Fire, Adult Probation, District Attorney, and Sheriff."
+Department Code,TEXT,"Departments are the primary organizational unit used by the City and County of San Francisco. Examples include Recreation and Parks, Public Works, and the Police Department."
+Department Code,TEXT,"Departments are the primary organizational unit used by the City and County of San Francisco. Examples include Recreation and Parks, Public Works, and the Police Department."
+Program Code,TEXT,"A program identifies the services a department provides. For example, the Police Department has programs for Patrol, Investigations, and Administration."
+Program,TEXT,"A program identifies the services a department provides. For example, the Police Department has programs for Patrol, Investigations, and Administration."
+Character Code,TEXT,"In the type hierarchy, Character is the highest level. For example, salaries, benefits, contractual services, and materials & supplies are recorded as different Characters."
+Character,TEXT,"In the type hierarchy, Character is the highest level. For example, salaries, benefits, contractual services, and materials & supplies are recorded as different Characters."
+Object Code,TEXT,"In the type hierarchy, Object is the middle level. For example, within the Salaries Character, Objects differentiate between Permanent Salaries, Temporary Salaries, and Overtime pay."
+Object,TEXT,"In the type hierarchy, Object is the middle level. For example, within the Salaries Character, Objects differentiate between Permanent Salaries, Temporary Salaries, and Overtime pay."
+Sub-object Code,TEXT,"In the type hierarchy, Sub-object is the lowest level of detail. For instance, within the Overtime Object, Sub-object segregates overtime for nurses from overtime for police officers and fire fighters (known as uniformed staff)."
+Sub-object,TEXT,"In the type hierarchy, Sub-object is the lowest level of detail. For instance, within the Overtime Object, Sub-object segregates overtime for nurses from overtime for police officers and fire fighters (known as uniformed staff)."
+Fund Type Code,TEXT,"In the Fund hierarchy, Fund Type is the highest level, and is used to group Funds according to governmental accounting standards."
+Fund Type,REAL,"In the Fund hierarchy, Fund Type is the highest level, and is used to group Funds according to governmental accounting standards."
+Fund Code,TEXT,"In the Fund hierarchy, Fund is the middle level. For example, within the Special Revenue Fund Type, you can find the Children’s Fund and the Open Space & Park Fund."
+Fund,TEXT,"In the Fund hierarchy, Fund is the middle level. For example, within the Special Revenue Fund Type, you can find the Children’s Fund and the Open Space & Park Fund."
+Fund Category Code,TEXT,"In the Fund hierarchy, Fund Category is the lowest level. Within Fund, Fund Categories group activity by their characteristics: Operating, Annual Projects, Continuing Projects, Grants, Interdepartmental/Work Order."
+Fund Category,REAL,"In the Fund hierarchy, Fund Category is the lowest level. Within Fund, Fund Categories group activity by their characteristics: Operating, Annual Projects, Continuing Projects, Grants, Interdepartmental/Work Order."
+Vouchers Paid,REAL,Completed payments to vendors.
+Vouchers Pending,REAL,Payments to vendors that have been requested but not yet paid.
+"""
