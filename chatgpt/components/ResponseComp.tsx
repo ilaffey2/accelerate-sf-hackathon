@@ -7,8 +7,8 @@ interface ResponseCompProps {
     item: string;
     index: number;
     tableData: string[][];
-    isTableVisible: boolean;
-    setTableVisible: (isVisible: boolean) => void;
+    //isTableVisible: boolean;
+    //setTableVisible: (isVisible: boolean) => void;
     //tableContainerRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -16,12 +16,14 @@ const ResponseComp: React.FC<ResponseCompProps> = ({
     item,
     index,
     tableData,
-    isTableVisible,
-    setTableVisible,
+    //isTableVisible,
+    //setTableVisible,
     //tableContainerRef,
 }) => {
 
     const tableContainerRef = useRef<any>(null);
+    const [isTableVisible, setTableVisible] = useState(true);
+
 
     useEffect(() => {
         const container = tableContainerRef.current;

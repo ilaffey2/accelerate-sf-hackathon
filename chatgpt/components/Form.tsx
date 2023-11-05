@@ -38,7 +38,6 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     }
   };
   const [tableData, setTableData] = useState<string[][][]>([])
-  const [isTableVisible, setTableVisible] = useState(true);
 
   // const tableContainerRef = useRef<any>(null);
 
@@ -216,8 +215,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                     item={item}
                     index={index}
                     tableData={tableData[(index - 1) / 2]}
-                    isTableVisible={isTableVisible}
-                    setTableVisible={setTableVisible}
+                  //isTableVisible={isTableVisible}
+                  //setTableVisible={setTableVisible}
                   //tableContainerRef={tableContainerRef}
                   />
                 </div>
