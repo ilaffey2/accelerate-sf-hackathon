@@ -61,8 +61,8 @@ def query(q: QueryInput) ->QueryResponse:
 
     print(results, columns)
 
-    summarize_prompt = summarize_sql_results_prompt(q.question, columns.__str__(), results.__str__())
-    summary = askgpt(summarize_prompt, model="gpt-3.5-turbo-16k")
+    summarize_prompt = summarize_sql_results_prompt(q.question, columns.__str__(), results[:50].__str__())
+    summary = askgpt(summarize_prompt, model="gpt-3.5-turbo")
 
     return QueryResponse(
         summary=summary,
