@@ -9,7 +9,7 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
         2. ONLY RESPOND WITH SQL THAT IS VALID BASED ON THE SCHEMA
         3. DO NOT RESPOND WITH ANY TEXT OR EMBELLISHMENT THAT ARE NOT VALID SQL
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
-        5. ENSURE THAT YOU NEVER USE LIKE, ONLY ILIKE
+        5. ENSURE THAT YOUR QUERY USES BIGQUERY CASE INSENSITIVE SYNTAX WHENEVER POSSIBLE EX: LOWER(Department) LIKE LOWER('HOM Homelessness Services')
         
 
         Generate a SQL query that answers the following question:
@@ -40,7 +40,7 @@ def get_sql_query_with_expanded_schema_prompt(
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
         5. DO NOT TRY AND MATCH KEYWORDS THAT MIGHT NOT EXIST IN THE DATA. TRY AND USE THE SCHEMA AND DESCRIPTIONS TO CREATE THE QUERY
         6. LIMIT YOUR RESPONSE TO a MAX of 10,000 ROWS
-        7.  ENSURE THAT YOU NEVER USE LIKE, ONLY ILIKE
+        7.  ENSURE THAT YOUR QUERY USES BIGQUERY CASE INSENSITIVE SYNTAX WHENEVER POSSIBLE EX: LOWER(Department) LIKE LOWER('HOM Homelessness Services')
 
 
         Generate a SQL query that answers the following question:
@@ -90,7 +90,7 @@ def get_expand_schema_prompt(question: str, schema: str) -> str:
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
         5. DO NOT TRY AND MATCH KEYWORDS THAT MIGHT NOT EXIST IN THE DATA. TRY AND USE THE SCHEMA AND DESCRIPTIONS TO CREATE THE QUERY
         6. ALWAYS LIMIT YOUR RESPONSE TO a MAX of 100 ROWS
-        7.  ENSURE THAT YOU NEVER USE LIKE, ONLY ILIKE
+        7. ENSURE THAT YOUR QUERY USES BIGQUERY CASE INSENSITIVE SYNTAX WHENEVER POSSIBLE EX: LOWER(Department) LIKE LOWER('HOM Homelessness Services')
         
         Use this SQL query to get more context on the schema rather than to get data back. For example, you can use the query
         to get back the unique values in one or more column.
@@ -108,8 +108,8 @@ def get_expand_schema_prompt(question: str, schema: str) -> str:
 def summarize_sql_results_prompt(question: str, columns: str, results: str) -> str:
     return f"""
         Summarize the results of the following question. Do not include the question in your response. 
+        Create a high level summary that helps the user understand the answer to their question, and the table. The user can already see the table.
         Only summarize the answer to the question:
-        Return your results as a markdown formatted string, pretty printed.
 
 
         QUESTION: {question}
@@ -117,6 +117,10 @@ def summarize_sql_results_prompt(question: str, columns: str, results: str) -> s
         COLUMNS: {columns}
 
         RESULTS: {results}
+
+        Return your results as a markdown formatted string, pretty printed.
+        Ensure your response is 3 sentences or less.
+
 
     """
 
