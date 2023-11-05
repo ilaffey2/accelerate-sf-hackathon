@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
-import * as echarts from 'echarts';
+// import * as echarts from 'echarts';
 
-type EChartsOption = echarts.EChartsOption;
+// type EChartsOption = echarts.EChartsOption;
 
 import Table from './Table'
 
