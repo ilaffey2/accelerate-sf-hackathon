@@ -1,42 +1,27 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+from schema import QueryInput, Column, Table, QueryResponse
+
+from sqlquery import execute_sql
 
 app = FastAPI()
 
-class QueryInput(BaseModel):
-    question: str
 
-
-
-class Column(BaseModel):
-    name: str
-    description: str
-
-
-class Table(BaseModel):
-    columns: List[Column]
-    rows: List[List[str]]
-
-
-class QueryResponse(BaseModel):
-    summary: str
-    table: Table
-
+example_sql = """
+select * from vendor_payments
+limit 100
+"""
 
 @app.post("/query")
-def query(q: QueryInput) -> QueryResponse:
+def query(q: QueryInput):
+    results, columns = execute_sql(example_sql)
+
+    print("columns", columns)
     return QueryResponse(
         summary="This is a summary",
         table=Table(
-            columns=[
-                Column(name="Column 1", description="This is the first column"),
-                Column(name="Column 2", description="This is the second column"),
-            ],
-            rows=[
-                ["Row 1", "Row 1"],
-                ["Row 2", "Row 2"],
-            ],
+            columns=columns,
+            rows=results,
         ),
     )
-
