@@ -16,7 +16,7 @@ type RequestData = {
 export const runtime = 'edge'
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const url = 'https://hermit-sharp-bengal.ngrok-free.app/query';
+  const url = 'https://accelerate-sf-hackathon-production.up.railway.app/query';
   
   // Prepare the request body with the question parameter
   const { question } = (await request.json()) as RequestData
