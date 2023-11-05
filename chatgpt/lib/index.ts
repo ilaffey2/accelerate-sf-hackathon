@@ -32,7 +32,10 @@ export function useStreamingQuery() {
   const handleTranslate = useCallback(async (question: string) => {
     try {
       setIsLoading(true);
-      const response = await postRaw("http://localhost:8000/query", question);
+      const response = await postRaw(
+        "https://hermit-sharp-bengal.ngrok-free.app/query",
+        question
+      );
       const reader = response.body!.getReader();
 
       const decoder = (chunk: any) => {
