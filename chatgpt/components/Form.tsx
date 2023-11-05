@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
+import * as echarts from 'echarts';
+
+type EChartsOption = echarts.EChartsOption;
 
 import Table from './Table'
 
@@ -76,7 +79,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       return; // Don't proceed if the message is empty
     }
 
-    setHistory((prev) => [message]); // Add the message to the history
+    setHistory((prev) => [...prev, message]); // Add the message to the history
 
     messageInput.current!.value = ''; // Clear the input field
 
@@ -86,7 +89,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
       console.log('Sending message:', message)
       // Use the postQuestion function to send the message to the API
-      const response = await fetch('/api/response', {
+      const response = await fetch('/api/textResponse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -103,6 +106,24 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       setTableData(responseData.data.table)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
+
+
+
+
+
+      const response2 = await fetch('/api/imgResponse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({
+        //   question: message,
+        // }),
+      })
+
+      const responseData2 = await response2.json();
+      console.log('API Image Response:', responseData2.data.imageString)
+
 
 
 
