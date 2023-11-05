@@ -30,19 +30,36 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
 
   const handlePromptSelection = async (promptText: string, id: number) => {
-    if (messageInput.current) {
-      messageInput.current.value = promptText;
+    try{
+      if (messageInput.current) {
+        messageInput.current.value = promptText;
 
-      submitButtonRef.current?.click()
-      const response = await fetch('/api/textResponse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id,
-        }),
-      })
+        setHistory((prev) => [...prev, promptText]); // Add the message to the history
+        messageInput.current!.value = ''; // Clear the input field
+
+
+        const response = await fetch('/api/preset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        })
+
+        const responseData = await response.json();
+
+
+        setTableData(responseData.data.table)
+
+        setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
+      }
+    } catch (error) {
+      // Handle any errors from the API request
+      console.error('API Request failed:', error);
+    } finally {
+      setIsLoading(false); // Reset loading state after the request
     }
   };
   const [tableData, setTableData] = useState<string[][]>([])

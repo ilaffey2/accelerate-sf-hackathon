@@ -1,9 +1,7 @@
 from typing import Tuple
 
 
-def get_preset_from_id(i: str) -> Tuple(str, str):
-    i = i.upper()
-
+def get_preset_from_id(i: str) -> Tuple[str, str]:
     if i == 1:
         pass
     elif i == 2:

@@ -24,7 +24,7 @@ class QueryResponse(BaseModel):
 
 
 class PresetInput(BaseModel):
-    i: str
+    i: int
 
 
 class VisualizeResponse(BaseModel):
