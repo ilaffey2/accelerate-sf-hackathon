@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
+import { Spinner } from '@chakra-ui/react'
 // import * as echarts from 'echarts';
 
 // type EChartsOption = echarts.EChartsOption;
@@ -33,6 +34,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const handlePromptSelection = async (promptText: string, id: number) => {
     try{
       if (messageInput.current) {
+        setIsLoading(true)
         messageInput.current.value = promptText;
 
         setHistory((prev) => [...prev, promptText]); // Add the message to the history
@@ -118,7 +120,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       console.log('API Response Summary:', responseData.data.summary);
       console.log('API Response Table:', responseData.data.table)
       setTableData(responseData.data.table)
-      setSql(responseData.data.table)
+      setSql(responseData.data.sql)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
@@ -239,6 +241,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           <span className="mr-1 font-bold text-white">SQL Query:</span>
           <code className='mx-6'>{sql}</code>
         </div>}
+        {isLoading &&  <Spinner height={'5xl'} width={'5xl'}/>}
         {tableData  && tableData.length > 0 && 
         (
         <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white"> 
