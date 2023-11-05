@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 // Define the TypeScript types for the expected response
 type QueryResponse = {
   summary: string;
@@ -7,11 +9,19 @@ type QueryResponse = {
   };
 };
 
-async function postQuestion(question: string): Promise<QueryResponse> {
+type RequestData = {
+  question: string
+}
+
+export const runtime = 'edge'
+
+export async function POST(request: Request): Promise<NextResponse> {
   const url = 'https://hermit-sharp-bengal.ngrok-free.app/query';
   
   // Prepare the request body with the question parameter
-  const requestBody = { question };
+  const { question } = (await request.json()) as RequestData
+
+  console.log('question', question)
 
   try {
     // Perform the fetch request
@@ -20,19 +30,23 @@ async function postQuestion(question: string): Promise<QueryResponse> {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({question}),
     });
 
     // Check if the request was successful
     if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+      throw new Error(`Error: ${response.status} and response ${response} and response text ${response.text}`);
     }
 
-    // Parse the JSON response
+    // // Parse the JSON response
     const data: QueryResponse = await response.json();
 
-    // Return the parsed data
-    return data;
+    console.log('data', data)
+
+    // // Return the parsed data
+    // return data;
+
+    return NextResponse.json({data}, {status: 200})
   } catch (error) {
     // Handle any errors that occurred during the request
     console.error('Error posting question:', error);

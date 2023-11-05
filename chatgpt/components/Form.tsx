@@ -2,6 +2,7 @@
 import type OpenAI from 'openai'
 import { useEffect, useRef, useState } from 'react'
 
+
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const messageInput = useRef<HTMLTextAreaElement | null>(null)
   // causes rerender without useEffect due to suspense boundary
@@ -43,10 +44,23 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     try {
       setIsLoading(true); // Set loading state before the request
 
-      // Use the postQuestion function to send the message to the API
-      const responseData = await postQuestion(message);
 
-      console.log('API Response:', responseData);
+      console.log('Sending message:', message)
+      // Use the postQuestion function to send the message to the API
+      const response = await fetch('/api/response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: message,
+        }),
+      })
+
+      const responseData = await response.json();
+      console.log('API Response:', responseData.data.summary);
+
+      setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
       // Process your responseData here
 
@@ -97,7 +111,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               <div
                 key={index}
                 className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
-                  } p-3 rounded-lg`}
+                  } p-3 rounded-lg mb-4`}
               >
                 <p className='text-white'>{item}</p>
               </div>
@@ -108,10 +122,11 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               return (
                 <div
                   key={index}
-                  className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
-                    } p-3 rounded-lg`}
+                  className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
+                    } p-3 rounded-lg mb-4`}
                 >
-                  <p>{item}</p>
+                  <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
+                    }`}>{item}</p>
                 </div>
               )
             })
