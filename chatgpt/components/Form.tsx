@@ -233,10 +233,13 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
             })
             : null}
             <div className='w-full mx-2 flex flex-col items-start gap-3 pb-6 last:mb-6 md:mx-auto md:max-w-6xl'>
-            {sql && <div className="inline-flex items-center bg-gray-800 text-green-400 text-xs px-2 py-1 rounded-md border border-green-400 font-mono flex-col gap-y-6">
-          <span className="mr-1 font-bold text-white">SQL Query:</span>
-          <code className='mx-6'>{sql}</code>
-        </div>}
+        {
+            sql && 
+            <div className="inline-flex items-center bg-gray-800 text-green-400 text-xs px-2 py-1 rounded-md border border-green-400 font-mono flex-col gap-y-6">
+              <span className="mr-1 font-bold text-white">SQL Query:</span>
+              <code className='mx-6'>{sql}</code>
+            </div>
+        }
         {isLoading &&  <Spinner size={'3xl'} />}
         {tableData  && tableData.length > 0 && 
         (
