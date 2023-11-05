@@ -17,6 +17,26 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
   const [tableData, setTableData] = useState<string[][]>([])
 
+  const tableContainerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    console.log('container', container)
+
+    if (!container) return;
+    const handleWheel = (e: any) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      container.scrollLeft += e.deltaY;
+    };
+
+    container.addEventListener('wheel', handleWheel);
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [tableData.length]);
+
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
       React.FormEvent<HTMLFormElement>
@@ -28,7 +48,6 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     }
   }
 
-  // ... assuming you've imported `postQuestion` and defined other state/hooks ...
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,7 +120,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   }
 
   return (
-    <div className='flex justify-center'>
+    <div className='flex justify-center max-w-screen overflow-x-auto'>
       <button
         onClick={handleReset}
         type='reset'
@@ -109,22 +128,11 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       >
         Clear History
       </button>
-      <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl'>
-        {isLoading
-          ? history.map((item: any, index: number) => {
-            return (
-              <div
-                key={index}
-                className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
-                  } p-3 rounded-lg mb-4`}
-              >
-                <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
-                  }`}>{item}</p>
-              </div>
-            )
-          })
-          : history
-            ? history.map((item: string, index: number) => {
+      <div>
+
+        <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl'>
+          {isLoading
+            ? history.map((item: any, index: number) => {
               return (
                 <div
                   key={index}
@@ -136,9 +144,33 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                 </div>
               )
             })
-            : null}
-            {tableData && tableData.length && <Table data={tableData}/>}
+            : history
+              ? history.map((item: string, index: number) => {
+                return (
+                  <div
+                    key={index}
+                    className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
+                      } p-3 rounded-lg mb-4`}
+                  >
+                    <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
+                      }`}>{item}</p>
+                  </div>
+                )
+              })
+              : null}
+        </div>
+
+        <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
+          {tableData && tableData.length > 0 && (
+            <div ref={tableContainerRef}  style={{ maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }}>
+              <Table data={tableData} />
+            </div>
+          )}
+        </div>
+        
+
       </div>
+
       <form
         onSubmit={handleSubmit}
         className='fixed bottom-0 w-full md:max-w-3xl bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'

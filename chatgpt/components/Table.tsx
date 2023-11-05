@@ -24,7 +24,7 @@ const Table = ({ data }: {data: any}) => {
   } = tableInstance;
 
   return (
-    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+    <table {...getTableProps()} className=" divide-y divide-gray-200 p-4" >
       <thead className="bg-gray-50">
         {headerGroups.map((headerGroup, index) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={index}>
