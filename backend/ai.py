@@ -16,4 +16,5 @@ def askgpt(query, system=None, model="gpt-3.5-turbo", **kwargs):
     if system: 
         msgs.append({"role": "system", "content": system})
     msgs.append({"role": "user", "content": query})
-    return ChatCompletion.create(model=model, messages=msgs, **kwargs)
+    res = ChatCompletion.create(model=model, messages=msgs, **kwargs)
+    return res.choices[0].message.content
