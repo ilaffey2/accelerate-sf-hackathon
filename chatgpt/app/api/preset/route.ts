@@ -15,9 +15,12 @@ type RequestData = {
 }
 
 export const runtime = 'edge'
+const { NEXT_PUBLIC_BACKEND_API } = process.env
+
+const URL = NEXT_PUBLIC_BACKEND_API ? NEXT_PUBLIC_BACKEND_API : 'http://0.0.0.0:8000'
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const url = 'http://0.0.0.0:8000/preset';
+  const url = URL + '/preset';
   
   // Prepare the request body with the question parameter
   const { id } = (await request.json()) as RequestData

@@ -60,7 +60,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         console.log(responseData)
 
 
-        setTableData(responseData.data.table)
+        setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
         //setSql(responseData.data.sql)
         setSql((prev) => [...prev, responseData.data.sql]); // Add the response to the history
 
