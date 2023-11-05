@@ -169,13 +169,16 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       >
         Clear History
       </button>
-      <div className='fixed left-[33%] mt-10 font-semibold text-lg text-decoration-line: underline'>
-        Ask anything about SF government spending, contracts, etc!
-      </div>
+      {history.length === 0 && (
+        <div className='fixed left-[33%] mt-10 font-semibold text-lg text-decoration-line: underline'>
+          Ask anything about SF government spending, contracts, etc!
+        </div>
+      )}
+
       {history.length === 0 && (
         <button
           onClick={toggleModal}
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-md bg-white text-gray-500 shadow-lg font-bold border-1 hover:bg-gray-100 transition-colors duration-[800ms] ease-in-out"
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg bg-white text-gray-500 shadow-lg font-bold border-1 hover:bg-gray-200 transition-colors duration-[800ms] ease-in-out"
         >
           What is this?
         </button>
@@ -197,6 +200,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               >
                 <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
                   }`}>{item}</p>
+                {index % 2 !== 0 && <div>Source</div>}
               </div>
             )
           })

@@ -14,9 +14,9 @@ type RequestData = {
 }
 
 export const runtime = 'edge'
-const { NEXT_PUBLIC_BACKEND_AP } = process.env
+const { NEXT_PUBLIC_BACKEND_API } = process.env
 
-const URL = NEXT_PUBLIC_BACKEND_AP ? NEXT_PUBLIC_BACKEND_AP : 'http://localhost:5000'
+const URL = NEXT_PUBLIC_BACKEND_API ? NEXT_PUBLIC_BACKEND_API : 'http://localhost:8000'
 
 export async function POST(request: Request): Promise<NextResponse> {
   const url = URL + '/query';
