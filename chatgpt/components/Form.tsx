@@ -175,7 +175,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       {history.length === 0 && (
         <button
           onClick={toggleModal}
-          className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-md bg-white text-gray-500 shadow-lg font-bold'
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-md bg-white text-gray-500 shadow-lg font-bold border-1 hover:bg-gray-100 transition-colors duration-[800ms] ease-in-out"
         >
           What is this?
         </button>
