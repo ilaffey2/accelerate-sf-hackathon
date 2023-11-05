@@ -39,6 +39,8 @@ def get_sql_query_with_expanded_schema_prompt(
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
         5. DO NOT TRY AND MATCH KEYWORDS THAT MIGHT NOT EXIST IN THE DATA. TRY AND USE THE SCHEMA AND DESCRIPTIONS TO CREATE THE QUERY
         6. LIMIT YOUR RESPONSE TO a MAX of 10,000 ROWS
+        7. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES
+
 
         Generate a SQL query that answers the following question:
 
@@ -105,12 +107,15 @@ def summarize_sql_results_prompt(question: str, columns: str, results: str) -> s
     return f"""
         Summarize the results of the following question. Do not include the question in your response. 
         Only summarize the answer to the question:
+        Return your results as a markdown formatted string, pretty printed.
+
 
         QUESTION: {question}
 
         COLUMNS: {columns}
 
         RESULTS: {results}
+
     """
 
 
