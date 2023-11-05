@@ -9,6 +9,7 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
         2. ONLY RESPOND WITH SQL THAT IS VALID BASED ON THE SCHEMA
         3. DO NOT RESPOND WITH ANY TEXT OR EMBELLISHMENT THAT ARE NOT VALID SQL
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
+        5. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES
 
         Generate a SQL query that answers the following question:
 
@@ -22,7 +23,10 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
 
     """
 
-def get_sql_query_with_expanded_schema_prompt(question: str, schema: str, expansion_query: str, expanded_cols, expanded_rows) -> str:
+
+def get_sql_query_with_expanded_schema_prompt(
+    question: str, schema: str, expansion_query: str, expanded_cols, expanded_rows
+) -> str:
     return f"""
         You're a very methodical SQL coder. You only every reply in valid bigquery SQL. You only run code that 
         you know is valid. You ONLY EVER ANSWER THE QUESTION WHEN IT IS ANSWERABLE BASED ON THE SCHEMA BELOW.
@@ -69,6 +73,7 @@ def get_sql_query_with_expanded_schema_prompt(question: str, schema: str, expans
 
         """
 
+
 def get_expand_schema_prompt(question: str, schema: str) -> str:
     return f"""
         Given the following question and schema, run a SQL query to get more context on the schema if you think
@@ -96,8 +101,7 @@ def get_expand_schema_prompt(question: str, schema: str) -> str:
     """
 
 
-
-def summarize_sql_results_prompt(question:str, columns: str, results: str) -> str:
+def summarize_sql_results_prompt(question: str, columns: str, results: str) -> str:
     return f"""
         Summarize the results of the following question. Do not include the question in your response. 
         Only summarize the answer to the question:
@@ -110,8 +114,7 @@ def summarize_sql_results_prompt(question:str, columns: str, results: str) -> st
     """
 
 
-
-def find_relevant_table_prompt(question: str, schema:str) -> str:
+def find_relevant_table_prompt(question: str, schema: str) -> str:
     return f"""
         Find a table that can answer the following question. Do not include the question in your response.
 
@@ -122,8 +125,10 @@ def find_relevant_table_prompt(question: str, schema:str) -> str:
         SCHEMA: {schema}    
     """
 
+
 def verify_valid_question(question: str, schema: str) -> bool:
     return True
+
 
 def verify_valid_sql(sql: str, schema: str) -> bool:
     return True

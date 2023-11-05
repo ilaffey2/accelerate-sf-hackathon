@@ -9,7 +9,15 @@ from prompt import (
     get_expand_schema_prompt,
     get_sql_query_with_expanded_schema_prompt,
 )
-from schema import QueryInput, Column, Table, QueryResponse, VisualizeResponse
+from presets import get_preset_from_enum
+from schema import (
+    QueryInput,
+    Column,
+    Table,
+    QueryResponse,
+    VisualizeResponse,
+    PresetInput,
+)
 from ai import askgpt, schema
 import json
 
@@ -84,6 +92,27 @@ def query(q: QueryInput) -> QueryResponse:
             columns=columns,
             rows=results,
         ),
+        sql=sql,
+    )
+
+
+@app.post("/preset")
+def preset(p: PresetInput) -> QueryResponse:
+    question, sql = get_preset_from_enum(p.enum)
+
+    results, columns = execute_sql(sql)
+    summarize_prompt = summarize_sql_results_prompt(
+        question, columns.__str__(), results[:50].__str__()
+    )
+    summary = askgpt(summarize_prompt, model="gpt-3.5-turbo-16k")
+
+    return QueryResponse(
+        summary=summary,
+        table=Table(
+            columns=columns,
+            rows=results,
+        ),
+        sql=sql,
     )
 
 
