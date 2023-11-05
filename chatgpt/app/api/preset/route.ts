@@ -16,7 +16,7 @@ type RequestData = {
 export const runtime = 'edge'
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const url = 'http://localhost:8000/preset';
+  const url = 'http://0.0.0.0:8000/preset';
   
   // Prepare the request body with the question parameter
   const { id } = (await request.json()) as RequestData
