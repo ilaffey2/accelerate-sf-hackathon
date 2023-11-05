@@ -9,6 +9,7 @@ import Link from 'next/link';
 // type EChartsOption = echarts.EChartsOption;
 
 import Table from './Table'
+import ResponseComp from './ResponseComp';
 
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
@@ -207,13 +208,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           : history
             ? history.map((item: string, index: number) => {
               return (
-                <div
-                  key={index}
-                  className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
-                    } p-3 rounded-lg mb-4`}
-                >
-                  <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
-                    }`}>{item}</p>
+                <div key={index}>
+                  <ResponseComp item={item} index={index} />
                 </div>
               )
             })
