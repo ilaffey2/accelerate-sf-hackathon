@@ -53,7 +53,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     return () => {
       container.removeEventListener('wheel', handleWheel);
     };
-  }, [tableData.length]);
+  }, [tableData]);
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
