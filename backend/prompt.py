@@ -9,7 +9,8 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
         2. ONLY RESPOND WITH SQL THAT IS VALID BASED ON THE SCHEMA
         3. DO NOT RESPOND WITH ANY TEXT OR EMBELLISHMENT THAT ARE NOT VALID SQL
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
-        5. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES
+        5. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES, USE ILIKE INSTEAD OF LIKE 
+        
 
         Generate a SQL query that answers the following question:
 
@@ -39,7 +40,7 @@ def get_sql_query_with_expanded_schema_prompt(
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
         5. DO NOT TRY AND MATCH KEYWORDS THAT MIGHT NOT EXIST IN THE DATA. TRY AND USE THE SCHEMA AND DESCRIPTIONS TO CREATE THE QUERY
         6. LIMIT YOUR RESPONSE TO a MAX of 10,000 ROWS
-        7. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES
+        7. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES, USE ILIKE INSTEAD OF LIKE 
 
 
         Generate a SQL query that answers the following question:
@@ -89,6 +90,7 @@ def get_expand_schema_prompt(question: str, schema: str) -> str:
         4. ALWAYS USE BACKTICKS (`) TO ENCLOSE COLUMN NAMES
         5. DO NOT TRY AND MATCH KEYWORDS THAT MIGHT NOT EXIST IN THE DATA. TRY AND USE THE SCHEMA AND DESCRIPTIONS TO CREATE THE QUERY
         6. ALWAYS LIMIT YOUR RESPONSE TO a MAX of 100 ROWS
+        7. ENSURE THAT YOU ALWAYS USE CASE INVARIANT QUERIES, USE ILIKE INSTEAD OF LIKE 
         
         Use this SQL query to get more context on the schema rather than to get data back. For example, you can use the query
         to get back the unique values in one or more column.
