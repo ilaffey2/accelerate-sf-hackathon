@@ -55,7 +55,7 @@ const ResponseComp: React.FC<ResponseCompProps> = ({
                 <div className='w-full mx-2 flex flex-col items-start gap-3 last:mb-6 md:mx-auto md:max-w-6xl text-xs'>
                     {tableData && tableData.length > 0 && (
                         <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white">
-                            {isTableVisible ? 'Hide Table' : 'Show Table'}
+                            {isTableVisible ? 'Hide Data' : 'Show Data'}
                         </button>
                     )}
                     {tableData && tableData.length > 0 && (
