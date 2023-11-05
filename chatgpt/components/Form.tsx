@@ -5,6 +5,8 @@ import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
 import { Spinner } from '@chakra-ui/react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 // import * as echarts from 'echarts';
 
 // type EChartsOption = echarts.EChartsOption;
@@ -212,14 +214,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         {isLoading
           ? history.map((item: any, index: number) => {
             return (
-              <div
-                key={index}
-                className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
-                  } p-3 rounded-lg mb-4`}
-              >
-                <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
-                  }`}>{item}</p>
-              </div>
+              <ReactMarkdown key={index} remarkPlugins={[remarkGfm]} className={`${ 'text-black'}`}>{item}</ReactMarkdown>
+
             )
           })
           : history

@@ -108,8 +108,8 @@ def get_expand_schema_prompt(question: str, schema: str) -> str:
 def summarize_sql_results_prompt(question: str, columns: str, results: str) -> str:
     return f"""
         Summarize the results of the following question. Do not include the question in your response. 
+        Create a high level summary that helps the user understand the answer to their question, and the table. The user can already see the table.
         Only summarize the answer to the question:
-        Return your results as a markdown formatted string, pretty printed.
 
 
         QUESTION: {question}
@@ -117,6 +117,10 @@ def summarize_sql_results_prompt(question: str, columns: str, results: str) -> s
         COLUMNS: {columns}
 
         RESULTS: {results}
+
+        Return your results as a markdown formatted string, pretty printed.
+        Ensure your response is 3 sentences or less.
+
 
     """
 
