@@ -37,7 +37,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       submitButtonRef.current?.click();
     }
   };
-  const [tableData, setTableData] = useState<string[][]>([])
+  const [tableData, setTableData] = useState<string[][][]>([])
   const [isTableVisible, setTableVisible] = useState(true);
 
   // const tableContainerRef = useRef<any>(null);
@@ -105,7 +105,9 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       console.log('API Response:', responseData)
       console.log('API Response Summary:', responseData.data.summary);
       console.log('API Response Table:', responseData.data.table)
-      setTableData(responseData.data.table)
+      // setTableData(responseData.data.table)
+      setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
+
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
@@ -213,7 +215,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                     key={index}
                     item={item}
                     index={index}
-                    tableData={tableData}
+                    tableData={tableData[(index - 1) / 2]}
                     isTableVisible={isTableVisible}
                     setTableVisible={setTableVisible}
                   //tableContainerRef={tableContainerRef}
