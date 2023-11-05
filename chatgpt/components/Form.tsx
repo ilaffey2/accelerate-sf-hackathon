@@ -136,7 +136,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         <p className='text-center'>Hey! We pulled all of the data from the <Link className="text-blue-500" href="https://openbook.sfgov.org/">https://openbook.sfgov.org/</Link> government site and synthesised everything into this easy interface! Ask anything about SF government spending, contracts, etc! </p>
       </Modal>
 
-      <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl'>
+      <div className='w-full h-80vh mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl mb-[100px]'>
         {isLoading
           ? history.map((item: any, index: number) => {
             return (
