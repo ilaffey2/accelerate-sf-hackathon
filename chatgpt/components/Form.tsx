@@ -216,7 +216,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       </button>
       {history.length === 0 && (
         <div className='fixed left-[33%] mt-8 font-semibold text-lg text-decoration-line: underline'>
-          Ask anything about SF government spending, contracts, etc!
+          Welcome to SF OpenBook!
+
         </div>
       )}
 
@@ -231,7 +232,9 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
       {/* Modal Component */}
       <Modal show={isModalOpen} onClose={toggleModal}>
-        <p className='text-center'>Hey! We pulled all of the data from the <Link className="text-blue-500" href="https://openbook.sfgov.org/">https://openbook.sfgov.org/</Link> government site and synthesised everything into this easy interface! Ask anything about SF government spending, contracts, etc! </p>
+        <p className='text-center'>Your transparency portal to San Francisco’s budget, fiscal, economic health and so much more through DataSF’s Open Data website.<br/>
+      We pulled all of the data from the <Link className="text-blue-500" href="https://openbook.sfgov.org/">https://openbook.sfgov.org/</Link><br/>
+ </p>
       </Modal>
 
       <div className='w-full h-80vh mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl mb-[100px]'>
@@ -300,7 +303,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
       <form
         onSubmit={handleSubmit}
-        className='fixed bottom-0 w-full md:max-w-3xl bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'
+        className='fixed bottom-0 w-full md:max-w-[59rem] bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'
       >
         <textarea
           name='Message'

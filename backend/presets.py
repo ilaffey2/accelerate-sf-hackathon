@@ -38,7 +38,7 @@ ORDER BY
         )
     elif i == 3:
         return (
-            "What do we spend money on mental health?",
+            "What do we spend money on for mental health?",
             """SELECT
  SUM(Vouchers_Paid) AS total_money_spent,
  Fiscal_Year,
