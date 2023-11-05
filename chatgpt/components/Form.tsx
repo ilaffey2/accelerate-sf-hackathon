@@ -161,6 +161,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
   return (
     <div className='flex justify-center max-w-screen overflow-x-auto'>
+
       <button
         onClick={handleReset}
         type='reset'
@@ -168,6 +169,9 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       >
         Clear History
       </button>
+      <div className='fixed left-[33%] mt-10 font-semibold text-lg text-decoration-line: underline'>
+        Ask anything about SF government spending, contracts, etc!
+      </div>
       {history.length === 0 && (
         <button
           onClick={toggleModal}
@@ -210,22 +214,22 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               )
             })
             : null}
-            <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
-        {tableData  && tableData.length > 0 && 
-        (
-        <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white"> 
-          {isTableVisible ? 'Hide Table' : 'Show Table'}
-        </button>)
-        }
-        {tableData && tableData.length > 0 && (
-          <>
-          
-          <div ref={tableContainerRef} style={{ maxWidth: '100%', maxHeight: '550px', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }} className={isTableVisible ? '' : 'hidden'}>
-            <Table data={tableData} />
-          </div>
-          </>
-        )}
-      </div>
+        <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
+          {tableData && tableData.length > 0 &&
+            (
+              <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white">
+                {isTableVisible ? 'Hide Table' : 'Show Table'}
+              </button>)
+          }
+          {tableData && tableData.length > 0 && (
+            <>
+
+              <div ref={tableContainerRef} style={{ maxWidth: '100%', maxHeight: '550px', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }} className={isTableVisible ? '' : 'hidden'}>
+                <Table data={tableData} />
+              </div>
+            </>
+          )}
+        </div>
       </div>
       <div className='fixed bottom-20'>
         {history.length === 0 && (
@@ -233,7 +237,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         )}
       </div>
 
-      
+
 
 
 
