@@ -1,6 +1,6 @@
 
 
-def get_sql_query_prompt(question: str, schema: str) -> str:
+def get_sql_query_prompt(question: str, schemas: str) -> str:
     return f"""
         You're a very methodical SQL coder. You only every reply in valid bigquery SQL. You only run code that 
         you know is valid. You ONLY EVER ANSWER THE QUESTION WHEN IT IS ANSWERABLE BASED ON THE SCHEMA BELOW.
@@ -20,7 +20,7 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
         --- 
         SCHEMA:
 
-        {schema}
+        {schemas}
 
         SQL:
 

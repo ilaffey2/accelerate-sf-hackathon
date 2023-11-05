@@ -19,6 +19,8 @@ with open(GCP_CREDS_PATH, "w") as f:
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = GCP_CREDS_PATH
 
 def execute_sql(sql):
+    print("Running sql query: \n", sql)
+    
     client = bigquery.Client()
     query_job = client.query(sql)
     results = query_job.result()

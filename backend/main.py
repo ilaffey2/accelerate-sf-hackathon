@@ -14,6 +14,8 @@ import base64
 from table_schema import schema
 from sqlquery import execute_sql
 
+from schema_extraction import extract_schema_from_tables
+
 app = FastAPI()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -29,10 +31,12 @@ limit 1000
 
 @app.post("/query")
 def query(q: QueryInput) ->QueryResponse:
-    prompt = get_sql_query_prompt(q.question, schema)
+
+    schemas = extract_schema_from_tables()
+    prompt = get_sql_query_prompt(q.question, schemas.__str__())
 
     st = time.time()
-    sql = askgpt(prompt, "gpt-4")
+    sql = askgpt(prompt, model="gpt-4")
     et = time.time()
 
     print("Query took: ", et - st, "seconds")
