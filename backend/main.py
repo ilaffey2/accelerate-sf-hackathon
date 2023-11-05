@@ -6,7 +6,6 @@ import openai
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
-
 from pydantic import BaseModel
 from prompt import (
     get_sql_query_prompt,
