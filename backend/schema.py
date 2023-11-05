@@ -19,3 +19,6 @@ class Table(BaseModel):
 class QueryResponse(BaseModel):
     summary: str
     table: Table
+
+class VisualizeResponse(BaseModel):
+    imageString: str
