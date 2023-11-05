@@ -3,7 +3,7 @@ import React from 'react';
 import { useTable } from 'react-table';
 
 
-const Table: React.FC = ({ data }) => {
+const Table = ({ data }: {data: any}) => {
   const columns = React.useMemo(
     () => Object.keys(data[0]).map((key, index) => ({
       Header: key,

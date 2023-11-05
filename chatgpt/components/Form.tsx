@@ -1,6 +1,7 @@
 'use client'
 import type OpenAI from 'openai'
 import { useEffect, useRef, useState } from 'react'
+import Table from './Table'
 
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
@@ -14,6 +15,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   // const [models, setModels] = useState<ModelType[]>([])
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
+  const [tableData, setTableData] = useState<string[][]>([])
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
@@ -37,7 +39,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       return; // Don't proceed if the message is empty
     }
 
-    setHistory((prev) => [...prev, message]); // Add the message to the history
+    setHistory((prev) => [message]); // Add the message to the history
 
     messageInput.current!.value = ''; // Clear the input field
 
@@ -58,11 +60,14 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       })
 
       const responseData = await response.json();
-      console.log('API Response:', responseData.data.summary);
+      console.log('API Response:', responseData)
+      console.log('API Response Summary:', responseData.data.summary);
+      console.log('API Response Table:', responseData.data.table)
+      setTableData(responseData.data.table)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
-      // Process your responseData here
+      
 
     } catch (error) {
       // Handle any errors from the API request
@@ -132,6 +137,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               )
             })
             : null}
+            {tableData && tableData.length && <Table data={tableData}/>}
       </div>
       <form
         onSubmit={handleSubmit}
