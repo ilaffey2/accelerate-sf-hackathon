@@ -196,13 +196,16 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         {isLoading
           ? history.map((item: any, index: number) => {
             return (
-              <div
-                key={index}
-                className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
-                  } p-3 rounded-lg mb-4`}
-              >
-                <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
-                  }`}>{item}</p>
+              <div key={index}>
+                <ResponseComp
+                  key={index}
+                  item={item}
+                  index={index}
+                  tableData={tableData[(index - 1) / 2]}
+                //isTableVisible={isTableVisible}
+                //setTableVisible={setTableVisible}
+                //tableContainerRef={tableContainerRef}
+                />
               </div>
             )
           })
