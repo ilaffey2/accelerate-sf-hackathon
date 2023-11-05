@@ -5,6 +5,8 @@ from typing import Optional, Union, Generator
 import openai
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
+
 from pydantic import BaseModel
 from prompt import (
     get_sql_query_prompt,
@@ -37,6 +39,16 @@ from sqlquery import execute_sql
 from schema_extraction import extract_schema_from_tables
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow any origin (not recommended for production)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 GCP_PROJECT_ID = os.getenv("GCP_PROJECT_ID")

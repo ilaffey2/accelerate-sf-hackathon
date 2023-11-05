@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useCallback } from "react";
 
 type QueryStep = {
@@ -11,12 +13,13 @@ export async function postRaw(
   question: string,
   options?: RequestInit
 ) {
+  console.log("posting raw");
   return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(question),
+    body: JSON.stringify({ question }),
     ...options,
   });
 }
@@ -29,7 +32,7 @@ export function useStreamingQuery() {
   const handleTranslate = useCallback(async (question: string) => {
     try {
       setIsLoading(true);
-      const response = await postRaw("http://localhost:80000", question);
+      const response = await postRaw("http://localhost:8000/query", question);
       const reader = response.body!.getReader();
 
       const decoder = (chunk: any) => {
