@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
+import { Spinner } from '@chakra-ui/react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 // import * as echarts from 'echarts';
 
 // type EChartsOption = echarts.EChartsOption;
@@ -29,15 +32,48 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   // const [models, setModels] = useState<ModelType[]>([])
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
+  const [sql, setSql] = useState<string>('')
 
-  const handlePromptSelection = (promptText: string) => {
-    if (messageInput.current) {
-      messageInput.current.value = promptText;
-      // "Click" the submit button programmatically
-      submitButtonRef.current?.click();
+
+  const handlePromptSelection = async (promptText: string, id: number) => {
+    try {
+      if (messageInput.current) {
+        setIsLoading(true)
+        messageInput.current.value = promptText;
+
+        setHistory((prev) => [...prev, promptText]); // Add the message to the history
+        messageInput.current!.value = ''; // Clear the input field
+
+
+        const response = await fetch('/api/preset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id,
+          }),
+        })
+
+        const responseData = await response.json();
+
+        console.log(responseData)
+
+
+        setTableData(responseData.data.table)
+        setSql(responseData.data.sql)
+
+        setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
+      }
+    } catch (error) {
+      // Handle any errors from the API request
+      console.error('API Request failed:', error);
+    } finally {
+      setIsLoading(false); // Reset loading state after the request
     }
   };
-  const [tableData, setTableData] = useState<string[][][]>([])
+  const [tableData, setTableData] = useState<string[][]>([])
+  const [isTableVisible, setTableVisible] = useState(true);
 
   // const tableContainerRef = useRef<any>(null);
 
@@ -107,6 +143,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       // setTableData(responseData.data.table)
       setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
 
+      setTableData(responseData.data.table)
+      setSql(responseData.data.sql)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
@@ -142,6 +180,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const handleReset = () => {
     localStorage.removeItem('response')
     setHistory([])
+    setSql("")
+    setTableData([])
   }
 
   // Save the 'history' state to 'localStorage' whenever it changes
@@ -207,6 +247,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                 //tableContainerRef={tableContainerRef}
                 />
               </div>
+
             )
           })
           : history
