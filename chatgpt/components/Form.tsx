@@ -32,7 +32,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   // const [models, setModels] = useState<ModelType[]>([])
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
-  const [sql, setSql] = useState<string>('')
+  const [sql, setSql] = useState<string[]>([])
 
 
   const handlePromptSelection = async (promptText: string, id: number) => {
@@ -61,7 +61,9 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
 
         setTableData(responseData.data.table)
-        setSql(responseData.data.sql)
+        //setSql(responseData.data.sql)
+        setSql((prev) => [...prev, responseData.data.sql]); // Add the response to the history
+
 
         setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
       }
@@ -143,8 +145,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       // setTableData(responseData.data.table)
       setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
 
-      setTableData(responseData.data.table)
-      setSql(responseData.data.sql)
+      //setTableData(responseData.data.table)
+      setSql((prev) => [...prev, responseData.data.sql]); // Add the response to the history
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
@@ -242,6 +244,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                   item={item}
                   index={index}
                   tableData={tableData[(index - 1) / 2]}
+                  sql={sql[(index - 1) / 2]}
                 //isTableVisible={isTableVisible}
                 //setTableVisible={setTableVisible}
                 //tableContainerRef={tableContainerRef}
@@ -259,6 +262,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                     item={item}
                     index={index}
                     tableData={tableData[(index - 1) / 2]}
+                    sql={sql[(index - 1) / 2]}
                   //isTableVisible={isTableVisible}
                   //setTableVisible={setTableVisible}
                   //tableContainerRef={tableContainerRef}
