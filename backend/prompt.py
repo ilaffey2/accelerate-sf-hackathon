@@ -16,7 +16,7 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
         {question}
 
         TABLE: hazel-mote-150900.vendor_payments.vouchers
-        
+
         --- 
         SCHEMA:
 
@@ -25,3 +25,9 @@ def get_sql_query_prompt(question: str, schema: str) -> str:
         SQL:
 
     """
+
+def verify_valid_question(question: str, schema: str) -> bool:
+    return True
+
+def verify_valid_sql(sql: str, schema: str) -> bool:
+    return True

@@ -29,32 +29,14 @@ limit 1000
 
 @app.post("/query")
 def query(q: QueryInput) ->QueryResponse:
-
-    # ask gpt to general sql
-    # sql = askgpt(q.question)
-    # print(sql)
-    results, columns = execute_sql(example_sql)
-    return QueryResponse(
-        summary="This is a summary",
-        table=Table(
-            columns=columns,
-            rows=results,
-        ),
-    )
-
-@app.post("/query-test")
-def query(q: QueryInput) ->QueryResponse:
-
-    # ask gpt to general sql
-    st = time.time()
     prompt = get_sql_query_prompt(q.question, schema)
 
+    st = time.time()
     sql = askgpt(prompt, "gpt-4")
     et = time.time()
 
-    print("query took", et - st, "seconds")
-    
-    print("sql: ", sql)
+    print("Query took: ", et - st, "seconds")
+
     results, columns = execute_sql(sql)
     return QueryResponse(
         summary="This is a summary",
