@@ -65,25 +65,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const [tableData, setTableData] = useState<string[][]>([])
   const [isTableVisible, setTableVisible] = useState(true);
 
-  const tableContainerRef = useRef<any>(null);
 
-  useEffect(() => {
-    const container = tableContainerRef.current;
-    console.log('container', container)
 
-    if (!container) return;
-    const handleWheel = (e: any) => {
-      if (e.deltaY === 0) return;
-      e.preventDefault();
-      container.scrollLeft += e.deltaY;
-    };
-
-    container.addEventListener('wheel', handleWheel);
-
-    return () => {
-      container.removeEventListener('wheel', handleWheel);
-    };
-  }, [tableData]);
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
@@ -246,7 +229,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         {tableData && tableData.length > 0 && (
           <>
           
-          <div ref={tableContainerRef} style={{ maxWidth: '100%', maxHeight: '550px', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }} className={isTableVisible ? '' : 'hidden'}>
+          <div style={{ maxWidth: '100%', maxHeight: '550px', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }} className={isTableVisible ? '' : 'hidden'}>
             <Table data={tableData} />
           </div>
           </>
