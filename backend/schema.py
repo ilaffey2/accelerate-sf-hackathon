@@ -31,6 +31,7 @@ class ColumnSchema(BaseModel):
 
 class TableSchema(BaseModel):
     name: str
+    # datasetid: str
     columns: List[ColumnSchema]
     description: str = ""
 

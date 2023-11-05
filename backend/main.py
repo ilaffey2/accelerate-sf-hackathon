@@ -2,11 +2,12 @@ import os
 import time
 import openai
 from fastapi import FastAPI
-from prompt import get_sql_query_prompt
+from prompt import get_sql_query_prompt, summarize_sql_results_prompt, find_relevant_table_prompt
 from schema import QueryInput, Column, Table, QueryResponse, VisualizeResponse
 from ai import askgpt, schema
 import json
 import matplotlib
+
 matplotlib.use('Agg') # Must be before importing matplotlib.pyplot or pylab!
 import matplotlib.pyplot as plt
 import io
@@ -21,19 +22,21 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 GCP_PROJECT_ID=os.getenv('GCP_PROJECT_ID')
 
-example_sql = f"""
-SELECT
-  *
-FROM
-  `{GCP_PROJECT_ID}.vendor_payments.vouchers`
-limit 1000
-"""
 
 @app.post("/query")
 def query(q: QueryInput) ->QueryResponse:
+    schemas= extract_schema_from_tables()
+    # schemas, table= extract_schema_from_tables()
 
-    schemas = extract_schema_from_tables()
-    prompt = get_sql_query_prompt(q.question, schemas.__str__())
+    relevant_table_prompt = find_relevant_table_prompt(q.question, schemas.__str__())
+    table = askgpt(relevant_table_prompt, model="gpt-4")
+
+    print("Using table: ", table)
+
+    table_schema = [s for s in schemas if s.name == table][0]
+
+    print("table_schema: ", table_schema)
+    prompt = get_sql_query_prompt(q.question, table_schema.__str__())
 
     st = time.time()
     sql = askgpt(prompt, model="gpt-4")
@@ -42,8 +45,14 @@ def query(q: QueryInput) ->QueryResponse:
     print("Query took: ", et - st, "seconds")
 
     results, columns = execute_sql(sql)
+
+    print(results, columns)
+
+    summarize_prompt = summarize_sql_results_prompt(q.question, columns.__str__(), results.__str__())
+    summary = askgpt(summarize_prompt, model="gpt-3.5-turbo")
+
     return QueryResponse(
-        summary="This is a summary",
+        summary=summary,
         table=Table(
             columns=columns,
             rows=results,

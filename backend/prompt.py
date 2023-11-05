@@ -15,15 +15,37 @@ def get_sql_query_prompt(question: str, schemas: str) -> str:
         QUESTION:
         {question}
 
-        TABLE: hazel-mote-150900.vendor_payments.vouchers
-
-        --- 
         SCHEMA:
 
         {schemas}
 
         SQL:
 
+    """
+
+def summarize_sql_results_prompt(question:str, columns: str, results: str) -> str:
+    return f"""
+        Summarize the results of the following question. Do not include the question in your response. 
+        Only summarize the answer to the question:
+
+        QUESTION: {question}
+
+        COLUMNS: {columns}
+
+        RESULTS: {results}
+    """
+
+
+
+def find_relevant_table_prompt(question: str, schema:str) -> str:
+    return f"""
+        Find a table that can answer the following question. Do not include the question in your response.
+
+        ONLY RESPOND WITH THE EXACT NAME OF THE TABLE
+
+        QUESTION: {question}
+
+        SCHEMA: {schema}    
     """
 
 def verify_valid_question(question: str, schema: str) -> bool:

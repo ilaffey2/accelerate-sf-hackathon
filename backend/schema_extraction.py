@@ -20,8 +20,12 @@ def extract_schema_from_tables() -> List[TableSchema]:
         table_ref = client.dataset(dataset_id=DATASET_ID, project=PROJECT_ID).table(table_id)
         table = client.get_table(table_ref)
 
+        print(table_ref)
+
         schemas.append(TableSchema(
-        name=table.table_id,  # use table_id as the name
+        # datasetid="hazel-mote-150900",
+        name=table.__str__(),  # use table_id as the name
+        # name=table.table_id,  # use table_id as the name
             columns=[
                 ColumnSchema(
                     name=field.name if field.name else "",
@@ -33,6 +37,7 @@ def extract_schema_from_tables() -> List[TableSchema]:
         ))
 
     return schemas
+    # return schemas, table
 
 
   
