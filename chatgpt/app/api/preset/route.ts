@@ -7,6 +7,7 @@ type QueryResponse = {
     columns: { name: string; description: string }[];
     rows: string[][];
   };
+  sql: string
 };
 
 type RequestData = {
@@ -41,7 +42,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // // Parse the JSON response
     const responseData: QueryResponse = await response.json();
     const { columns, rows } = responseData.table;
-    const {summary} = responseData
+    const {summary, sql} = responseData
 
       // Transform the columns into an array of strings
       const transformedColumns = columns.map(column => column.name);
@@ -62,7 +63,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // // Return the parsed data
     // return data;
 
-    const data = {table, summary}
+    const data = {table, summary, sql}
 
     return NextResponse.json({data}, {status: 200})
   } catch (error) {

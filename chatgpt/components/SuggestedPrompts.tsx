@@ -27,8 +27,8 @@ const prompts: Prompt[] = [
     },
     {
         id: 3,
-        text: 'Small Business Spending',
-        description: 'What do we spend money on for supporting small businesses?',
+        text: 'Mental Health Spending',
+        description: 'What do we spend money on mental health?',
     },
     {
         id: 4,

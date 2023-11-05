@@ -28,6 +28,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   // const [models, setModels] = useState<ModelType[]>([])
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
+  const [sql , setSql] = useState<string>('')
 
   const handlePromptSelection = async (promptText: string, id: number) => {
     try{
@@ -50,8 +51,11 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
         const responseData = await response.json();
 
+        console.log(responseData)
+
 
         setTableData(responseData.data.table)
+        setSql(responseData.data.sql)
 
         setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
       }
@@ -149,6 +153,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const handleReset = () => {
     localStorage.removeItem('response')
     setHistory([])
+    setSql("")
+    setTableData([])
   }
 
   // Save the 'history' state to 'localStorage' whenever it changes
@@ -234,6 +240,10 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           </div>
           </>
         )}
+        {sql && <div className="inline-flex items-center bg-gray-800 text-green-400 text-xs px-2 py-1 rounded-md border border-green-400 font-mono flex-col gap-y-6">
+          <span className="mr-1 font-bold text-white">SQL Query:</span>
+          <code className='mx-6'>{sql}</code>
+        </div>}
       </div>
       </div>
       <div className='fixed bottom-20'>

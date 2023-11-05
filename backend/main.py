@@ -98,6 +98,7 @@ def query(q: QueryInput) -> QueryResponse:
 
 @app.post("/preset")
 def preset(p: PresetInput) -> QueryResponse:
+    print("Received Preset Request:", p)
     question, sql = get_preset_from_id(p.i)
 
     results, columns = execute_sql(sql)
