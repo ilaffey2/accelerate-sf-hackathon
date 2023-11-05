@@ -72,7 +72,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       setIsLoading(false); // Reset loading state after the request
     }
   };
-  const [tableData, setTableData] = useState<string[][]>([])
+  const [tableData, setTableData] = useState<string[][][]>([])
   const [isTableVisible, setTableVisible] = useState(true);
 
   // const tableContainerRef = useRef<any>(null);
