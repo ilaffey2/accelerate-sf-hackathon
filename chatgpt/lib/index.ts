@@ -50,7 +50,7 @@ export function useStreamingQuery() {
           break;
         }
 
-        result.push(decoder(value));
+        result = [...result, decoder(value)];
         setQuerySteps(result);
       }
     } catch (e: any) {
