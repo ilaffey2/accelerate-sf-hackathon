@@ -22,3 +22,16 @@ class QueryResponse(BaseModel):
 
 class VisualizeResponse(BaseModel):
     imageString: str
+
+
+class ColumnSchema(BaseModel):
+    name: str
+    type: str = ""
+    description: str = ""
+
+class TableSchema(BaseModel):
+    name: str
+    columns: List[ColumnSchema]
+    description: str = ""
+
+
