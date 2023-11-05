@@ -6,8 +6,6 @@ from schema import TableSchema, ColumnSchema
 
 load_dotenv()
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_PATH')
-
 table_ids = ["budget","purchase_order_summary","spending_and_revenue","supplier_contracts","vouchers"]
 
 DATASET_ID = 'vendor_payments'
@@ -15,9 +13,7 @@ PROJECT_ID = 'hazel-mote-150900'
 
 
 def extract_schema_from_tables() -> List[TableSchema]:
-
     client = bigquery.Client()
-
     schemas = []
 
     for table_id in table_ids:
