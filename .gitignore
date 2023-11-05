@@ -1,0 +1,6 @@
+*.sqlite
+*.sqlite3
+*.db
+gcp-credentials.json
+gcp-creds.json
+/.DS_Store

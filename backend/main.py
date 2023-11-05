@@ -9,8 +9,11 @@ app = FastAPI()
 
 
 example_sql = """
-select * from vendor_payments
-limit 100
+SELECT
+  *
+FROM
+  `hazel-mote-150900.vendor_payments.vouchers`
+limit 1000
 """
 
 @app.post("/query")
