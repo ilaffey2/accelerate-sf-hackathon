@@ -29,10 +29,32 @@ class ColumnSchema(BaseModel):
     type: str = ""
     description: str = ""
 
+    def __str__(self):
+        return f"""
+name: {self.name}
+type: {self.type}
+description: {self.description}
+
+"""
+    
+    def __repr__(self):
+        return self.__str__()
+
 class TableSchema(BaseModel):
     name: str
     # datasetid: str
     columns: List[ColumnSchema]
     description: str = ""
+
+    def __str__(self):
+        return f"""
+name: {self.name}
+description: {self.description}
+columns: {self.columns}
+
+"""
+    
+    def __repr__(self):
+        return self.__str__()
 
 

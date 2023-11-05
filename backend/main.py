@@ -2,7 +2,7 @@ import os
 import time
 import openai
 from fastapi import FastAPI
-from prompt import get_sql_query_prompt, summarize_sql_results_prompt, find_relevant_table_prompt
+from prompt import get_sql_query_prompt, summarize_sql_results_prompt, find_relevant_table_prompt, get_expand_schema_prompt, get_sql_query_with_expanded_schema_prompt
 from schema import QueryInput, Column, Table, QueryResponse, VisualizeResponse
 from ai import askgpt, schema
 import json
@@ -26,20 +26,33 @@ GCP_PROJECT_ID=os.getenv('GCP_PROJECT_ID')
 @app.post("/query")
 def query(q: QueryInput) ->QueryResponse:
     schemas= extract_schema_from_tables()
+
     # schemas, table= extract_schema_from_tables()
 
-    relevant_table_prompt = find_relevant_table_prompt(q.question, schemas.__str__())
-    table = askgpt(relevant_table_prompt, model="gpt-4")
+    # relevant_table_prompt = find_relevant_table_prompt(q.question, schemas.__str__())
+    # table = askgpt(relevant_table_prompt, model="gpt-4")
 
-    print("Using table: ", table)
+    # print("Using table: ", table)
 
-    table_schema = [s for s in schemas if s.name == table][0]
+    # table_schema = [s for s in schemas if s.name == table][0]
 
-    print("table_schema: ", table_schema)
-    prompt = get_sql_query_prompt(q.question, table_schema.__str__())
+    # print("table_schema: ", table_schema)
+
+    prompt = get_sql_query_prompt(q.question, schemas.__str__())
+
+    # Try and gather more context
+    expand_schema_prompt = get_expand_schema_prompt(q.question, schemas.__str__())
+    expand_schema_query = askgpt(expand_schema_prompt, model="gpt-4")
+    expand_schema_results, expand_schema_columns = execute_sql(expand_schema_query)
+
+
+    if len(expand_schema_results) != 0:
+        print("Expanding schema resulted in {} new rows".format(len(expand_schema_results)))
+        prompt = get_sql_query_with_expanded_schema_prompt(q.question, schemas.__str__(), expand_schema_query, expand_schema_columns.__str__(), expand_schema_results.__str__())
+
 
     st = time.time()
-    sql = askgpt(prompt, model="gpt-4")
+    sql = askgpt(prompt, model="gpt-3.5-turbo-16k")
     et = time.time()
 
     print("Query took: ", et - st, "seconds")
@@ -49,7 +62,7 @@ def query(q: QueryInput) ->QueryResponse:
     print(results, columns)
 
     summarize_prompt = summarize_sql_results_prompt(q.question, columns.__str__(), results.__str__())
-    summary = askgpt(summarize_prompt, model="gpt-3.5-turbo")
+    summary = askgpt(summarize_prompt, model="gpt-3.5-turbo-16k")
 
     return QueryResponse(
         summary=summary,
