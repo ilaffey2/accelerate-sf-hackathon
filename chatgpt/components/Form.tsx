@@ -2,12 +2,19 @@
 import type OpenAI from 'openai'
 import { useEffect, useRef, useState } from 'react'
 import SuggestedPrompts from '../components/SuggestedPrompts';
+import Modal from './Modal';
+import Link from 'next/link';
 
 
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const messageInput = useRef<HTMLTextAreaElement | null>(null)
   const submitButtonRef = useRef<HTMLButtonElement | null>(null); // Ref for the submit button
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+
   // causes rerender without useEffect due to suspense boundary
   // const storedResponse = typeof localStorage !== 'undefined' ? localStorage.getItem('response') : null;
   // const initialHistory = storedResponse ? JSON.parse(storedResponse) : [];
@@ -115,6 +122,20 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       >
         Clear History
       </button>
+      {history.length === 0 && (
+        <button
+          onClick={toggleModal}
+          className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-md bg-white text-gray-500 shadow-lg'
+        >
+          What is this?
+        </button>
+      )}
+
+      {/* Modal Component */}
+      <Modal show={isModalOpen} onClose={toggleModal}>
+        <p className='text-center'>Hey! We pulled all of the data from the <Link className="text-blue-500" href="https://openbook.sfgov.org/">https://openbook.sfgov.org/</Link> government site and synthesised everything into this easy interface! Ask anything about SF government spending, contracts, etc! </p>
+      </Modal>
+
       <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl'>
         {isLoading
           ? history.map((item: any, index: number) => {
