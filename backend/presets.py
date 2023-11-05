@@ -1,14 +1,14 @@
 from typing import Tuple
 
 
-def get_preset_from_enum(enum: str) -> Tuple(str, str):
-    enum = enum.upper()
+def get_preset_from_id(i: str) -> Tuple(str, str):
+    i = i.upper()
 
-    if enum == "LEAD_CONTRACTORS":
+    if i == 1:
         pass
-    elif enum == "CONTRACTOR_SPEND":
+    elif i == 2:
         pass
-    elif enum == "HOMELESS_CONTRACTS":
+    elif i == 3:
         pass
-    elif enum == "SMALL_BUSINESS_SPEND":
+    elif i == 4:
         pass

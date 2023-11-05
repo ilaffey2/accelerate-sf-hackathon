@@ -24,7 +24,7 @@ class QueryResponse(BaseModel):
 
 
 class PresetInput(BaseModel):
-    enum: str
+    i: str
 
 
 class VisualizeResponse(BaseModel):

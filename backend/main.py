@@ -9,7 +9,7 @@ from prompt import (
     get_expand_schema_prompt,
     get_sql_query_with_expanded_schema_prompt,
 )
-from presets import get_preset_from_enum
+from presets import get_preset_from_id
 from schema import (
     QueryInput,
     Column,
@@ -98,7 +98,7 @@ def query(q: QueryInput) -> QueryResponse:
 
 @app.post("/preset")
 def preset(p: PresetInput) -> QueryResponse:
-    question, sql = get_preset_from_enum(p.enum)
+    question, sql = get_preset_from_id(p.i)
 
     results, columns = execute_sql(sql)
     summarize_prompt = summarize_sql_results_prompt(

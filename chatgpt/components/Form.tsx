@@ -29,11 +29,20 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
 
-  const handlePromptSelection = (promptText: string) => {
+  const handlePromptSelection = async (promptText: string, id: number) => {
     if (messageInput.current) {
       messageInput.current.value = promptText;
-      // "Click" the submit button programmatically
-      submitButtonRef.current?.click();
+
+      submitButtonRef.current?.click()
+      const response = await fetch('/api/textResponse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      })
     }
   };
   const [tableData, setTableData] = useState<string[][]>([])
