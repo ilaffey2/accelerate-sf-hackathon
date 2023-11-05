@@ -118,6 +118,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       console.log('API Response Summary:', responseData.data.summary);
       console.log('API Response Table:', responseData.data.table)
       setTableData(responseData.data.table)
+      setSql(responseData.data.table)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
@@ -125,18 +126,18 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
 
 
-      const response2 = await fetch('/api/imgResponse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // body: JSON.stringify({
-        //   question: message,
-        // }),
-      })
+      // const response2 = await fetch('/api/imgResponse', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   // body: JSON.stringify({
+      //   //   question: message,
+      //   // }),
+      // })
 
-      const responseData2 = await response2.json();
-      console.log('API Image Response:', responseData2.data.imageString)
+      // const responseData2 = await response2.json();
+      // console.log('API Image Response:', responseData2.data.imageString)
 
 
 
@@ -176,6 +177,8 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
   return (
     <div className='flex justify-center max-w-screen overflow-x-auto'>
+
+      <div className='fixed left-[20px] top-[35px] text-blue-500 underline'>Source</div>
       <button
         onClick={handleReset}
         type='reset'
@@ -184,9 +187,15 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         Clear History
       </button>
       {history.length === 0 && (
+        <div className='fixed left-[33%] mt-8 font-semibold text-lg text-decoration-line: underline'>
+          Ask anything about SF government spending, contracts, etc!
+        </div>
+      )}
+
+      {history.length === 0 && (
         <button
           onClick={toggleModal}
-          className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-md bg-white text-gray-500 shadow-lg font-bold'
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg bg-white text-gray-500 shadow-lg font-bold border-1 hover:bg-gray-200 transition-colors duration-[800ms] ease-in-out"
         >
           What is this?
         </button>
@@ -253,7 +262,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
         )}
       </div>
 
-      
+
 
 
 
