@@ -241,7 +241,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           <span className="mr-1 font-bold text-white">SQL Query:</span>
           <code className='mx-6'>{sql}</code>
         </div>}
-        {isLoading &&  <Spinner height={'5xl'} width={'5xl'}/>}
+        {isLoading &&  <Spinner size={'3xl'} />}
         {tableData  && tableData.length > 0 && 
         (
         <button onClick={() => setTableVisible(!isTableVisible)} className="p-2 rounded-md bg-blue-500 text-white"> 
