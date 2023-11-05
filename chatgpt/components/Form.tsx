@@ -110,10 +110,11 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
             return (
               <div
                 key={index}
-                className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-500'
+                className={`${index % 2 === 0 ? 'bg-blue-500' : 'bg-gray-300'
                   } p-3 rounded-lg mb-4`}
               >
-                <p className='text-white'>{item}</p>
+                <p className={`${index % 2 === 0 ? 'text-white' : 'text-black'
+                  }`}>{item}</p>
               </div>
             )
           })
