@@ -5,6 +5,7 @@ import SuggestedPrompts from '../components/SuggestedPrompts';
 import Modal from './Modal';
 import Link from 'next/link';
 
+import Table from './Table'
 
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
@@ -32,6 +33,27 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       submitButtonRef.current?.click();
     }
   };
+  const [tableData, setTableData] = useState<string[][]>([])
+
+  const tableContainerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const container = tableContainerRef.current;
+    console.log('container', container)
+
+    if (!container) return;
+    const handleWheel = (e: any) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      container.scrollLeft += e.deltaY;
+    };
+
+    container.addEventListener('wheel', handleWheel);
+
+    return () => {
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [tableData.length]);
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
@@ -44,7 +66,6 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     }
   }
 
-  // ... assuming you've imported `postQuestion` and defined other state/hooks ...
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,7 +76,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       return; // Don't proceed if the message is empty
     }
 
-    setHistory((prev) => [...prev, message]); // Add the message to the history
+    setHistory((prev) => [message]); // Add the message to the history
 
     messageInput.current!.value = ''; // Clear the input field
 
@@ -76,11 +97,14 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
       })
 
       const responseData = await response.json();
-      console.log('API Response:', responseData.data.summary);
+      console.log('API Response:', responseData)
+      console.log('API Response Summary:', responseData.data.summary);
+      console.log('API Response Table:', responseData.data.table)
+      setTableData(responseData.data.table)
 
       setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
-      // Process your responseData here
+
 
     } catch (error) {
       // Handle any errors from the API request
@@ -114,7 +138,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   }
 
   return (
-    <div className='flex justify-center'>
+    <div className='flex justify-center max-w-screen overflow-x-auto'>
       <button
         onClick={handleReset}
         type='reset'
@@ -170,6 +194,17 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           <SuggestedPrompts onPromptSelect={handlePromptSelection} />
         )}
       </div>
+
+      <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
+        {tableData && tableData.length > 0 && (
+          <div ref={tableContainerRef} style={{ maxWidth: '100%', marginLeft: 'auto', marginRight: 'auto', overflowX: 'auto' }}>
+            <Table data={tableData} />
+          </div>
+        )}
+      </div>
+
+
+
       <form
         onSubmit={handleSubmit}
         className='fixed bottom-0 w-full md:max-w-3xl bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'

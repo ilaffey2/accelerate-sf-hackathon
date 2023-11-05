@@ -1,0 +1,8 @@
+*.sqlite
+*.sqlite3
+*.db
+gcp-credentials.json
+gcp-creds.json
+/.DS_Store
+*.ipynb
+backend/.ipynb_checkpoints/

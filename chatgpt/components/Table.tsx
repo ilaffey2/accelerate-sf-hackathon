@@ -3,7 +3,7 @@ import React from 'react';
 import { useTable } from 'react-table';
 
 
-const Table: React.FC = ({ data }) => {
+const Table = ({ data }: {data: any}) => {
   const columns = React.useMemo(
     () => Object.keys(data[0]).map((key, index) => ({
       Header: key,
@@ -24,7 +24,7 @@ const Table: React.FC = ({ data }) => {
   } = tableInstance;
 
   return (
-    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+    <table {...getTableProps()} className=" divide-y divide-gray-200 p-4" >
       <thead className="bg-gray-50">
         {headerGroups.map((headerGroup, index) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={index}>
