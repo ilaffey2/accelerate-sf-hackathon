@@ -1,6 +1,8 @@
 'use client'
 import type OpenAI from 'openai'
 import { useEffect, useRef, useState } from 'react'
+import SuggestedPrompts from '../components/SuggestedPrompts';
+
 
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
@@ -132,6 +134,9 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
               )
             })
             : null}
+      </div>
+      <div className='fixed bottom-20'>
+        <SuggestedPrompts />
       </div>
       <form
         onSubmit={handleSubmit}
