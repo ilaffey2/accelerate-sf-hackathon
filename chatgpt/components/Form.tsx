@@ -7,6 +7,7 @@ import SuggestedPrompts from '../components/SuggestedPrompts';
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   const messageInput = useRef<HTMLTextAreaElement | null>(null)
+  const submitButtonRef = useRef<HTMLButtonElement | null>(null); // Ref for the submit button
   // causes rerender without useEffect due to suspense boundary
   // const storedResponse = typeof localStorage !== 'undefined' ? localStorage.getItem('response') : null;
   // const initialHistory = storedResponse ? JSON.parse(storedResponse) : [];
@@ -16,6 +17,14 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   // const [models, setModels] = useState<ModelType[]>([])
   const [models, setModels] = useState(modelsList.data)
   const [currentModel, setCurrentModel] = useState<string>('gpt-4')
+
+  const handlePromptSelection = (promptText: string) => {
+    if (messageInput.current) {
+      messageInput.current.value = promptText;
+      // "Click" the submit button programmatically
+      submitButtonRef.current?.click();
+    }
+  };
 
   const handleEnter = (
     e: React.KeyboardEvent<HTMLTextAreaElement> &
@@ -136,7 +145,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
             : null}
       </div>
       <div className='fixed bottom-20'>
-        <SuggestedPrompts />
+        <SuggestedPrompts onPromptSelect={handlePromptSelection} />
       </div>
       <form
         onSubmit={handleSubmit}
@@ -150,6 +159,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           className='w-full resize-none bg-white outline-none pt-4 pl-4 translate-y-1'
         />
         <button
+          ref={submitButtonRef} // Set the ref here
           disabled={isLoading}
           type='submit'
           className='absolute top-[1.4rem] right-5 p-1 rounded-md text-gray-500 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent'
