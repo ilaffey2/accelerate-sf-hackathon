@@ -166,7 +166,9 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
             : null}
       </div>
       <div className='fixed bottom-20'>
-        <SuggestedPrompts onPromptSelect={handlePromptSelection} />
+        {history.length === 0 && (
+          <SuggestedPrompts onPromptSelect={handlePromptSelection} />
+        )}
       </div>
       <form
         onSubmit={handleSubmit}
