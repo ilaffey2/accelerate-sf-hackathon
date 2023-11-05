@@ -1,7 +1,11 @@
 import os
 import time
+import json
+from typing import Optional, Union, Generator
 import openai
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
 from prompt import (
     get_sql_query_prompt,
     summarize_sql_results_prompt,
@@ -117,6 +121,7 @@ def preset(p: PresetInput) -> QueryResponse:
     )
 
 
+
 @app.post("/visualize_test")
 def query() -> VisualizeResponse:
     code_to_run = """
@@ -225,3 +230,77 @@ buf.seek(0)
 #     # Return the base64 string
 #     # return VisualizeResponse(imageString="test")
 #     return VisualizeResponse(imageString=image_base64)
+
+
+class QueryStep(BaseModel):
+    summary: Optional[str]
+    sql: Optional[str]
+    table: Optional[Table]
+    
+
+def streaming_query(question) -> Union[Generator[QueryStep, None, None], str]:
+    def f():
+        yield QueryStep(summary="Running query to get data schema", sql="", table=None).json()
+        
+        schemas = extract_schema_from_tables()
+        prompt = get_sql_query_prompt(question, schemas.__str__())
+
+        # Try and gather more context
+        expand_schema_prompt = get_expand_schema_prompt(question, schemas.__str__())
+        expand_schema_query = askgpt(expand_schema_prompt, model="gpt-4")
+
+        yield QueryStep(summary="Fetching more context to answer query", sql=expand_schema_query, table=None).json()
+
+        expand_schema_results, expand_schema_columns = execute_sql(expand_schema_query)
+
+        if len(expand_schema_results) != 0:
+            print(
+                "Expanding schema resulted in {} new rows".format(
+                    len(expand_schema_results)
+                )
+            )
+
+            yield QueryStep(
+                    summary="Expanding schema resulted in {} new rows".format(
+                        len(expand_schema_results)
+                    ),
+                    sql="",
+                    table=Table(
+                        columns=expand_schema_columns, rows=expand_schema_results
+                    ),
+                ).json()
+            
+            
+            prompt = get_sql_query_with_expanded_schema_prompt(
+                question,
+                schemas.__str__(),
+                expand_schema_query,
+                expand_schema_columns.__str__(),
+                expand_schema_results.__str__(),
+            )
+
+        st = time.time()
+        sql = askgpt(prompt, model="gpt-4-0613")
+        et = time.time()
+
+        yield QueryStep(summary="Running query to get data", sql=sql, table=None).json()
+
+        print("Query took: ", et - st, "seconds")
+
+        results, columns = execute_sql(sql)
+        summarize_prompt = summarize_sql_results_prompt(
+            question, columns.__str__(), results[:50].__str__()
+        )
+        summary = askgpt(summarize_prompt, model="gpt-3.5-turbo-16k")
+
+        yield QueryStep(summary=summary, sql=sql, table=Table(columns=columns, rows=results)).json()
+    
+    return f()
+
+
+@app.post("/query-streaming", response_model=None)
+def transform(q: QueryInput) -> Union[str, StreamingResponse]:
+    steps = streaming_query(q.question)
+    return StreamingResponse(steps, media_type="text/event-stream")
+
+
