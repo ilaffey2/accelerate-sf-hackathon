@@ -162,7 +162,7 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
   return (
     <div className='flex justify-center max-w-screen overflow-x-auto'>
 
-      <div className='fixed left-[20px] top-[35px] text-blue-500 underline'>Source</div>
+      <div className='fixed left-[20px] top-[35px] text-blue-500 underline'><Link href="https://openbook.sfgov.org/">Source</Link></div>
       <button
         onClick={handleReset}
         type='reset'
