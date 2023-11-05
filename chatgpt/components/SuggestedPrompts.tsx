@@ -30,11 +30,7 @@ const prompts: Prompt[] = [
         text: 'Mental Health Spending',
         description: 'What do we spend money on mental health?',
     },
-    {
-        id: 4,
-        text: 'Contractor Spend',
-        description: 'How much are we spending on contractors?',
-    },
+
 ];
 
 const SuggestedPrompts: React.FC<SuggestedPromptsProps> = ({ onPromptSelect }) => {
@@ -47,6 +43,11 @@ const SuggestedPrompts: React.FC<SuggestedPromptsProps> = ({ onPromptSelect }) =
                     <p className="prompt-description mt-2 text-xs text-gray-600">{prompt.description}</p>
                 </button>
             ))}
+            <button  className="prompt bg-white rounded-lg shadow-md p-2 disabled cursor-default " 
+                >
+                    <p className="prompt-text font-semibold text-xs">Or Choose Your Own!</p>
+                    <p className="prompt-description mt-2 text-xs text-gray-600">Enter a custom prompt below...</p>
+                </button>
         </div>
 
     );
