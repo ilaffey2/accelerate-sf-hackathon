@@ -2,10 +2,14 @@
 
 import { useState, useCallback } from "react";
 
-type QueryStep = {
+export type QueryStep = {
   summary?: string;
-  table?: string;
+  table?: {
+    columns: { name: string; description: string }[];
+    rows: string[][];
+  };
   sql?: string;
+  isLast?: boolean;
 };
 
 export async function postRaw(
@@ -32,8 +36,10 @@ export function useStreamingQuery() {
   const handleTranslate = useCallback(async (question: string) => {
     try {
       setIsLoading(true);
+      setQuerySteps([{}]);
+
       const response = await postRaw(
-        "https://hermit-sharp-bengal.ngrok-free.app/query",
+        "https://hermit-sharp-bengal.ngrok-free.app/query-streaming",
         question
       );
       const reader = response.body!.getReader();
@@ -53,7 +59,7 @@ export function useStreamingQuery() {
           break;
         }
 
-        result = [...result, decoder(value)];
+        result = [...result, JSON.parse(decoder(value))];
         setQuerySteps(result);
       }
     } catch (e: any) {

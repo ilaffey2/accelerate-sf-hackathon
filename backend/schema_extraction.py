@@ -6,6 +6,7 @@ from schema import TableSchema, ColumnSchema
 
 load_dotenv()
 
+
 table_ids = ["budget","purchase_order_summary","spending_and_revenue","supplier_contracts","vouchers"]
 
 DATASET_ID = 'vendor_payments'

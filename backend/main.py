@@ -247,6 +247,7 @@ class QueryStep(BaseModel):
     summary: Optional[str]
     sql: Optional[str]
     table: Optional[Table]
+    isLast: Optional[bool] = False
     
 
 def streaming_query(question) -> Union[Generator[QueryStep, None, None], str]:
@@ -304,7 +305,7 @@ def streaming_query(question) -> Union[Generator[QueryStep, None, None], str]:
         )
         summary = askgpt(summarize_prompt, model="gpt-3.5-turbo-16k")
 
-        yield QueryStep(summary=summary, sql=sql, table=Table(columns=columns, rows=results)).json()
+        yield QueryStep(summary=summary, sql=sql, table=Table(columns=columns, rows=results, isLast=True)).json()
     
     return f()
 

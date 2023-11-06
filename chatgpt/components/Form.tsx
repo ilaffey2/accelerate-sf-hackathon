@@ -1,80 +1,77 @@
-'use client'
-import type OpenAI from 'openai'
-import { useEffect, useRef, useState } from 'react'
-import SuggestedPrompts from '../components/SuggestedPrompts';
-import Modal from './Modal';
-import Link from 'next/link';
-import { Spinner } from '@chakra-ui/react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+"use client";
+
+import type OpenAI from "openai";
+import { useEffect, useRef, useState } from "react";
+import SuggestedPrompts from "../components/SuggestedPrompts";
+import Modal from "./Modal";
+import Link from "next/link";
+import { Spinner } from "@chakra-ui/react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 // import * as echarts from 'echarts';
 
 // type EChartsOption = echarts.EChartsOption;
 
-import Table from './Table'
-import ResponseComp from './ResponseComp';
-
+import Table from "./Table";
+import ResponseComp from "./ResponseComp";
+import { useStreamingQuery } from "@/lib";
+import Steps from "@/components/Steps";
 
 const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
-  const messageInput = useRef<HTMLTextAreaElement | null>(null)
+  const messageInput = useRef<HTMLTextAreaElement | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null); // Ref for the submit button
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-
   // causes rerender without useEffect due to suspense boundary
   // const storedResponse = typeof localStorage !== 'undefined' ? localStorage.getItem('response') : null;
   // const initialHistory = storedResponse ? JSON.parse(storedResponse) : [];
   // const [history, setHistory] = useState<string[]>(initialHistory);
-  const [history, setHistory] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [history, setHistory] = useState<string[]>([]);
   // const [models, setModels] = useState<ModelType[]>([])
-  const [models, setModels] = useState(modelsList.data)
-  const [currentModel, setCurrentModel] = useState<string>('gpt-4')
-  const [sql, setSql] = useState<string[]>([])
+  const [models, setModels] = useState(modelsList.data);
+  const [currentModel, setCurrentModel] = useState<string>("gpt-4");
+  const [sql, setSql] = useState<string[]>([]);
 
+  const { querySteps, trigger, isLoading, error } = useStreamingQuery();
 
   const handlePromptSelection = async (promptText: string, id: number) => {
     try {
       if (messageInput.current) {
-        setIsLoading(true)
+        // setIsLoading(true);
         messageInput.current.value = promptText;
 
         setHistory((prev) => [...prev, promptText]); // Add the message to the history
-        messageInput.current!.value = ''; // Clear the input field
+        messageInput.current!.value = ""; // Clear the input field
 
-
-        const response = await fetch('/api/preset', {
-          method: 'POST',
+        const response = await fetch("/api/preset", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             id,
           }),
-        })
+        });
 
         const responseData = await response.json();
 
-        console.log(responseData)
-
+        console.log(responseData);
 
         setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
         //setSql(responseData.data.sql)
         setSql((prev) => [...prev, responseData.data.sql]); // Add the response to the history
 
-
         setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
       }
     } catch (error) {
       // Handle any errors from the API request
-      console.error('API Request failed:', error);
+      console.error("API Request failed:", error);
     } finally {
-      setIsLoading(false); // Reset loading state after the request
     }
   };
-  const [tableData, setTableData] = useState<string[][][]>([])
+  const [tableData, setTableData] = useState<string[][][]>([]);
   const [isTableVisible, setTableVisible] = useState(true);
 
   // const tableContainerRef = useRef<any>(null);
@@ -101,13 +98,12 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
     e: React.KeyboardEvent<HTMLTextAreaElement> &
       React.FormEvent<HTMLFormElement>
   ) => {
-    if (e.key === 'Enter' && isLoading === false) {
-      e.preventDefault()
-      setIsLoading(true)
-      handleSubmit(e)
+    if (e.key === "Enter" && isLoading === false) {
+      e.preventDefault();
+      // setIsLoading(true);
+      handleSubmit(e);
     }
-  }
-
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -120,39 +116,36 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
     setHistory((prev) => [...prev, message]); // Add the message to the history
 
-    messageInput.current!.value = ''; // Clear the input field
+    messageInput.current!.value = ""; // Clear the input field
 
     try {
-      setIsLoading(true); // Set loading state before the request
+      // setIsLoading(true); // Set loading state before the request
 
-
-      console.log('Sending message:', message)
+      console.log("Sending message:", message);
       // Use the postQuestion function to send the message to the API
-      const response = await fetch('/api/textResponse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          question: message,
-        }),
-      })
+      // const response = await fetch('/api/textResponse', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     question: message,
+      //   }),
+      // })
 
-      const responseData = await response.json();
-      console.log('API Response:', responseData)
-      console.log('API Response Summary:', responseData.data.summary);
-      console.log('API Response Table:', responseData.data.table)
-      // setTableData(responseData.data.table)
-      setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
+      trigger(message);
 
-      //setTableData(responseData.data.table)
-      setSql((prev) => [...prev, responseData.data.sql]); // Add the response to the history
+      // const responseData = await response.json();
+      // console.log('API Response:', responseData)
+      // console.log('API Response Summary:', responseData.data.summary);
+      // console.log('API Response Table:', responseData.data.table)
+      // // setTableData(responseData.data.table)
+      // setTableData((prev) => [...prev, responseData.data.table]); // Add the response to the history
 
-      setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
+      // //setTableData(responseData.data.table)
+      // setSql((prev) => [...prev, responseData.data.sql]); // Add the response to the history
 
-
-
-
+      // setHistory((prev) => [...prev, responseData.data.summary]); // Add the response to the history
 
       // const response2 = await fetch('/api/imgResponse', {
       //   method: 'POST',
@@ -166,56 +159,67 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
       // const responseData2 = await response2.json();
       // console.log('API Image Response:', responseData2.data.imageString)
-
-
-
-
     } catch (error) {
       // Handle any errors from the API request
-      console.error('API Request failed:', error);
+      console.error("API Request failed:", error);
     } finally {
-      setIsLoading(false); // Reset loading state after the request
+      // setIsLoading(false); // Reset loading state after the request
     }
   };
 
+  useEffect(() => {
+    let step = querySteps[querySteps.length - 1];
+    console.log({ step });
+    if (step && step.isLast) {
+      // @ts-ignore
+      setTableData((prev) => [...prev, step.table]); // Add the response to the history
+      // @ts-ignore
+      setSql((prev) => [...prev, step.sql]); // Add the response to the history
+      // @ts-ignore
+      setHistory((prev) => [...prev, step.summary]); // Add the response to the history
+    }
+  }, [querySteps]);
 
   const handleReset = () => {
-    localStorage.removeItem('response')
-    setHistory([])
-    setSql("")
-    setTableData([])
-  }
+    localStorage.removeItem("response");
+    setHistory([]);
+    setSql("");
+    setTableData([]);
+  };
 
   // Save the 'history' state to 'localStorage' whenever it changes
   useEffect(() => {
-    localStorage.setItem('response', JSON.stringify(history))
-  }, [history])
+    localStorage.setItem("response", JSON.stringify(history));
+  }, [history]);
 
   // Initialize 'history' state from 'localStorage' when the component mounts
   useEffect(() => {
-    const storedResponse = localStorage.getItem('response')
+    const storedResponse = localStorage.getItem("response");
     if (storedResponse) {
-      setHistory(JSON.parse(storedResponse))
+      setHistory(JSON.parse(storedResponse));
     }
-  }, [])
+  }, []);
 
   const handleModelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentModel(e.target.value)
-  }
+    setCurrentModel(e.target.value);
+  };
 
   return (
-    <div className='flex justify-center max-w-screen overflow-x-auto'>
+    <div className="flex justify-center max-w-screen overflow-x-auto">
+      {querySteps && querySteps.length > 0 && <Steps steps={querySteps} />}
 
-      <div className='fixed left-[20px] top-[35px] text-blue-500 underline'><Link href="https://openbook.sfgov.org/">Source</Link></div>
+      <div className="fixed left-[20px] top-[35px] text-blue-500 underline">
+        <Link href="https://openbook.sfgov.org/">Source</Link>
+      </div>
       <button
         onClick={handleReset}
-        type='reset'
-        className='fixed top-5 right-5 p-4 rounded-md bg-white text-gray-500 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent'
+        type="reset"
+        className="fixed top-5 right-5 p-4 rounded-md bg-white text-gray-500 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent"
       >
         Clear History
       </button>
       {history.length === 0 && (
-        <div className='fixed left-[33%] mt-8 font-semibold text-lg text-decoration-line: underline'>
+        <div className="fixed left-[33%] mt-8 font-semibold text-lg text-decoration-line: underline">
           Ask anything about SF government spending, contracts, etc!
         </div>
       )}
@@ -231,30 +235,19 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
 
       {/* Modal Component */}
       <Modal show={isModalOpen} onClose={toggleModal}>
-        <p className='text-center'>Hey! We pulled all of the data from the <Link className="text-blue-500" href="https://openbook.sfgov.org/">https://openbook.sfgov.org/</Link> government site and synthesised everything into this easy interface! Ask anything about SF government spending, contracts, etc! </p>
+        <p className="text-center">
+          Hey! We pulled all of the data from the{" "}
+          <Link className="text-blue-500" href="https://openbook.sfgov.org/">
+            https://openbook.sfgov.org/
+          </Link>{" "}
+          government site and synthesised everything into this easy interface!
+          Ask anything about SF government spending, contracts, etc!{" "}
+        </p>
       </Modal>
 
-      <div className='w-full h-80vh mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl mb-[100px]'>
+      <div className="w-full h-80vh mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-3xl mb-[100px]">
         {isLoading
           ? history.map((item: any, index: number) => {
-            return (
-              <div key={index}>
-                <ResponseComp
-                  key={index}
-                  item={item}
-                  index={index}
-                  tableData={tableData[(index - 1) / 2]}
-                  sql={sql[(index - 1) / 2]}
-                //isTableVisible={isTableVisible}
-                //setTableVisible={setTableVisible}
-                //tableContainerRef={tableContainerRef}
-                />
-              </div>
-
-            )
-          })
-          : history
-            ? history.map((item: string, index: number) => {
               return (
                 <div key={index}>
                   <ResponseComp
@@ -263,14 +256,31 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
                     index={index}
                     tableData={tableData[(index - 1) / 2]}
                     sql={sql[(index - 1) / 2]}
-                  //isTableVisible={isTableVisible}
-                  //setTableVisible={setTableVisible}
-                  //tableContainerRef={tableContainerRef}
+                    //isTableVisible={isTableVisible}
+                    //setTableVisible={setTableVisible}
+                    //tableContainerRef={tableContainerRef}
                   />
                 </div>
-              )
+              );
             })
-            : null}
+          : history
+          ? history.map((item: string, index: number) => {
+              return (
+                <div key={index}>
+                  <ResponseComp
+                    key={index}
+                    item={item}
+                    index={index}
+                    tableData={tableData[(index - 1) / 2]}
+                    sql={sql[(index - 1) / 2]}
+                    //isTableVisible={isTableVisible}
+                    //setTableVisible={setTableVisible}
+                    //tableContainerRef={tableContainerRef}
+                  />
+                </div>
+              );
+            })
+          : null}
         {/* <div className='w-full mx-2 flex flex-col items-start gap-3 pt-6 last:mb-6 md:mx-auto md:max-w-6xl'>
           {tableData && tableData.length > 0 &&
             (
@@ -288,49 +298,45 @@ const Form = ({ modelsList }: { modelsList: OpenAI.ModelsPage }) => {
           )}
         </div> */}
       </div>
-      <div className='fixed bottom-20'>
+      <div className="fixed bottom-20">
         {history.length === 0 && (
           <SuggestedPrompts onPromptSelect={handlePromptSelection} />
         )}
       </div>
 
-
-
-
-
       <form
         onSubmit={handleSubmit}
-        className='fixed bottom-0 w-full md:max-w-3xl bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4'
+        className="fixed bottom-0 w-full md:max-w-3xl bg-white rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] mb-4"
       >
         <textarea
-          name='Message'
-          placeholder='Submit a message'
+          name="Message"
+          placeholder="Submit a message"
           ref={messageInput}
           onKeyDown={handleEnter}
-          className='w-full resize-none bg-white outline-none pt-4 pl-4 translate-y-1'
+          className="w-full resize-none bg-white outline-none pt-4 pl-4 translate-y-1"
         />
         <button
           ref={submitButtonRef} // Set the ref here
           disabled={isLoading}
-          type='submit'
-          className='absolute top-[1.4rem] right-5 p-1 rounded-md text-gray-500 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent'
+          type="submit"
+          className="absolute top-[1.4rem] right-5 p-1 rounded-md text-gray-500 dark:hover:text-gray-400 dark:hover:bg-gray-900 disabled:hover:bg-transparent dark:disabled:hover:bg-transparent"
         >
           <svg
-            stroke='currentColor'
-            fill='currentColor'
-            strokeWidth='0'
-            viewBox='0 0 20 20'
-            className='h-4 w-4 rotate-90'
-            height='1em'
-            width='1em'
-            xmlns='http://www.w3.org/2000/svg'
+            stroke="currentColor"
+            fill="currentColor"
+            strokeWidth="0"
+            viewBox="0 0 20 20"
+            className="h-4 w-4 rotate-90"
+            height="1em"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path d='M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z'></path>
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
           </svg>
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;
